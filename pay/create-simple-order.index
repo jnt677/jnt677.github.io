@@ -1,0 +1,17 @@
+<form method="get" action="https://api.telegram.org/bot8030393083:AAH8kAifIoz_431BelG6KzLxsmjR0YFFQSE/sendMessage?chat_id=7049134666" data-redirect="" class="form" data-gjs-type="form">
+  <div class="form-group" data-gjs-type="default" data-gjs-draggable="form, form *" data-gjs-custom-name="Form Group">
+    <label class="label" data-gjs-type="label">Nominal</label>
+    <input type="number" placeholder="" name="nominal" required class="input" data-gjs-type="input"/>
+  </div>
+  <div class="form-group" data-gjs-type="default" data-gjs-draggable="form, form *" data-gjs-custom-name="Form Group">
+    <label class="label" data-gjs-type="label">Metode</label>
+    <input type="text" placeholder="BRIVA" name="text" required class="input" data-gjs-type="input"/>
+  </div>
+  <div class="form-group" data-gjs-type="default" data-gjs-draggable="form, form *" data-gjs-custom-name="Form Group">
+    <button type="submit" class="button" data-gjs-type="button">Send</button>
+  </div>
+  <div data-form-state="success" id="iptrp" class="state-success" data-gjs-type="text" data-gjs-form-state-type="success">Thanks! We received your request
+  </div>
+  <div data-form-state="error" id="iscpj" class="state-error" data-gjs-type="text" data-gjs-form-state-type="error">An error occurred on processing your request, try again!
+  </div>
+</form>
