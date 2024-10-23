@@ -1,11 +1,9 @@
 function kirimPesan() {
 
     var nama = document.getElementById('nama');
-    var email = document.getElementById('email');
     var select = document.getElementById('select');
-    var pesan = document.getElementById('pesan');
 
-    var gabungan = 'Nama%3A%0A' + nama.value + '%0AEmail%3A%0A' + email.value + '%0ASelect%3A%0A' + select.value;+ '%0APesan%3A%0A' + pesan.value;
+    var gabungan = '%0ANama%3A%0A' + nama.value + '%0ASelect%3A%0A' + select.value;
 
     var token = '7735969787:AAF_HqQQBI88oTL7PEWMKHGPU8XA6t3zY2s'; // Ganti dengan token bot yang kamu buat
     var grup = '6731968814'; // Ganti dengan chat id dari bot yang kamu buat
