@@ -1,37 +1,23 @@
 <?php
-require_once 'HTTP/Request2.php';
-$request = new HTTP_Request2();
-$request->setUrl('https://api.tokopay.id/v1/order?merchant_id=M240509URZTI530');
-$request->setMethod(HTTP_Request2::METHOD_POST);
-$request->setConfig(array(
-  'follow_redirects' => TRUE
+
+$curl = curl_init();
+
+curl_setopt_array($curl, array(
+  CURLOPT_URL => 'https://api.tokopay.id/v1/order?merchant_id=M240509URZTI530',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => '',
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 0,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => 'POST',
+  CURLOPT_POSTFIELDS => 'merchant_id=M240509URZTI530&kode_channel=BRIVA&reff_id=545t&amount=12450&customer_name=menre&customer_email=&customer_phone=&redirect_url=pay_url&expired_ts=0&signature=&items=',
+  CURLOPT_HTTPHEADER => array(
+    'Content-Type: application/x-www-form-urlencoded'
+  ),
 ));
-$request->setHeader(array(
-  'Content-Type' => 'application/x-www-form-urlencoded'
-));
-$request->addPostParameter(array(
-  'merchant_id' => 'M240509URZTI530',
-  'kode_channel' => 'BRIVA',
-  'reff_id' => '545t',
-  'amount' => '12450',
-  'customer_name' => 'menre',
-  'customer_email' => '',
-  'customer_phone' => '',
-  'redirect_url' => 'pay_url',
-  'expired_ts' => '0',
-  'signature' => '',
-  'items' => ''
-));
-try {
-  $response = $request->send();
-  if ($response->getStatus() == 200) {
-    echo $response->getBody();
-  }
-  else {
-    echo 'Unexpected HTTP status: ' . $response->getStatus() . ' ' .
-    $response->getReasonPhrase();
-  }
-}
-catch(HTTP_Request2_Exception $e) {
-  echo 'Error: ' . $e->getMessage();
-}
+
+$response = curl_exec($curl);
+
+curl_close($curl);
+echo $response;
