@@ -1,23 +1,19 @@
-<?php
-
-$curl = curl_init();
-
-curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://api.tokopay.id/v1/order?merchant_id=M240509URZTI530',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => '',
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 0,
-  CURLOPT_FOLLOWLOCATION => true,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => 'POST',
-  CURLOPT_POSTFIELDS => 'merchant_id=M240509URZTI530&kode_channel=BRIVA&reff_id=545t&amount=12450&customer_name=menre&customer_email=&customer_phone=&redirect_url=pay_url&expired_ts=0&signature=&items=',
-  CURLOPT_HTTPHEADER => array(
-    'Content-Type: application/x-www-form-urlencoded'
-  ),
-));
-
-$response = curl_exec($curl);
-
-curl_close($curl);
-echo $response;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pembayaran TokoPay</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <form id="tokopay-form" method="POST" action="process.php">
+        <label for="nama">Nama:</label>
+        <input type="text" id="nama" name="nama" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <input type="hidden" name="merchant_id" value="YOUR_MERCHANT_ID">
+        <input type="hidden" name="order_id" value="ORDER_ID">
+        <input type="hidden" name="amount" value="AMOUNT">
+        <button type="submit">Bayar Sekarang</button>
+    </form>
+</body>
+</html>
