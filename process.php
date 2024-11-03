@@ -1,7 +1,7 @@
 <?php
 // Ganti dengan API Key dan Merchant ID Anda
 $apiKey = 'YOUR_API_KEY';
-$merchantId = 'YOUR_MERCHANT_ID';
+$merchantId = M240902EATNH111;
 
 // Ambil data dari form
 $nama = $_POST['nama'];
