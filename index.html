@@ -1,27 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran TokoPay</title>
     <link rel="stylesheet" href="style.css">
-    <title>Demo Bot Form</title>
 </head>
-
 <body>
-
-    <form>
-        <input type="text" id="nama" placeholder="Nama" />
-        <input type="text" id="email" placeholder="Email" />
-        <input type="text" id="pesan" placeholder="Pesan" />
-        <input type="submit" id="kirim" value="KIRIM" onclick="kirimPesan()" />
+    <form id="tokopay-form" method="POST" action="process.php">
+        <label for="nama">Nama:</label>
+        <input type="text" id="nama" name="nama" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <input type="hidden" name="merchant_id" value="YOUR_MERCHANT_ID">
+        <input type="hidden" name="order_id" value="ORDER_ID">
+        <input type="hidden" name="amount" value="AMOUNT">
+        <button type="submit">Bayar Sekarang</button>
     </form>
-
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
-    integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://jnt677.github.io/main.js"></script>
-
 </html>
