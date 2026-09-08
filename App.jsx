@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+const { useEffect, useMemo, useRef, useState } = React;
 
 const API_URL =
   "https://jezjupxysmctthvkrnpx.supabase.co/functions/v1/jnt-wa-api";
 
-export default function App() {
+function App() {
   const [chats, setChats] = useState({});
   const [selectedChatId, setSelectedChatId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -376,12 +376,7 @@ const styles = {
     background: "#fff",
     color: "#111",
   },
-
-  header: {
-    padding: "16px",
-    borderBottom: "1px solid #ddd",
-  },
-
+  header: { padding: "16px", borderBottom: "1px solid #ddd" },
   status: {
     display: "flex",
     alignItems: "center",
@@ -390,32 +385,15 @@ const styles = {
     marginTop: "5px",
     color: "#666",
   },
-
   dot: {
     width: "8px",
     height: "8px",
     borderRadius: "50%",
     display: "inline-block",
   },
-
-  content: {
-    flex: 1,
-    minHeight: 0,
-    display: "flex",
-  },
-
-  sidebar: {
-    width: "300px",
-    borderRight: "1px solid #ddd",
-    overflowY: "auto",
-  },
-
-  sidebarTitle: {
-    padding: "14px",
-    fontWeight: "bold",
-    borderBottom: "1px solid #eee",
-  },
-
+  content: { flex: 1, minHeight: 0, display: "flex" },
+  sidebar: { width: "300px", borderRight: "1px solid #ddd", overflowY: "auto" },
+  sidebarTitle: { padding: "14px", fontWeight: "bold", borderBottom: "1px solid #eee" },
   chatItem: {
     width: "100%",
     border: "none",
@@ -425,16 +403,8 @@ const styles = {
     textAlign: "left",
     cursor: "pointer",
   },
-
-  chatItemActive: {
-    background: "#f1f1f1",
-  },
-
-  chatName: {
-    fontWeight: "bold",
-    marginBottom: "4px",
-  },
-
+  chatItemActive: { background: "#f1f1f1" },
+  chatName: { fontWeight: "bold", marginBottom: "4px" },
   chatPreview: {
     fontSize: "13px",
     color: "#666",
@@ -442,81 +412,22 @@ const styles = {
     overflow: "hidden",
     textOverflow: "ellipsis",
   },
-
-  chatTime: {
-    fontSize: "11px",
-    color: "#999",
-    marginTop: "5px",
-  },
-
-  chat: {
-    flex: 1,
-    minWidth: 0,
-    display: "flex",
-    flexDirection: "column",
-  },
-
+  chatTime: { fontSize: "11px", color: "#999", marginTop: "5px" },
+  chat: { flex: 1, minWidth: 0, display: "flex", flexDirection: "column" },
   chatHeader: {
     padding: "14px",
     borderBottom: "1px solid #ddd",
     display: "flex",
     flexDirection: "column",
   },
-
-  messages: {
-    flex: 1,
-    overflowY: "auto",
-    padding: "16px",
-  },
-
-  messageRow: {
-    display: "flex",
-    marginBottom: "8px",
-  },
-
-  bubble: {
-    maxWidth: "75%",
-    padding: "9px 12px",
-    borderRadius: "10px",
-  },
-
-  myBubble: {
-    background: "#dcf8c6",
-  },
-
-  contactBubble: {
-    background: "#f1f1f1",
-  },
-
-  messageText: {
-    whiteSpace: "pre-wrap",
-    wordBreak: "break-word",
-  },
-
-  messageTime: {
-    fontSize: "10px",
-    color: "#777",
-    marginTop: "4px",
-    textAlign: "right",
-  },
-
-  error: {
-    padding: "10px",
-    background: "#fee2e2",
-    color: "#991b1b",
-  },
-
-  empty: {
-    padding: "20px",
-    color: "#888",
-    textAlign: "center",
-  },
-
-  center: {
-    flex: 1,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "#777",
-  },
+  messages: { flex: 1, overflowY: "auto", padding: "16px" },
+  messageRow: { display: "flex", marginBottom: "8px" },
+  bubble: { maxWidth: "75%", padding: "9px 12px", borderRadius: "10px" },
+  myBubble: { background: "#dcf8c6" },
+  contactBubble: { background: "#f1f1f1" },
+  messageText: { whiteSpace: "pre-wrap", wordBreak: "break-word" },
+  messageTime: { fontSize: "10px", color: "#777", marginTop: "4px", textAlign: "right" },
+  error: { padding: "10px", background: "#fee2e2", color: "#991b1b" },
+  empty: { padding: "20px", color: "#888", textAlign: "center" },
+  center: { flex: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "#777" },
 };
