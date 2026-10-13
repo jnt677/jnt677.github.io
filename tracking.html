@@ -32,7 +32,7 @@
     input{min-width:0;flex:1;border:1px solid #e8e8ea;border-radius:10px;padding:12px;font-size:12px;outline-color:var(--brand);background:#fafafa}
     .primary{border:0;border-radius:10px;background:var(--brand);color:#fff;padding:0 16px;font-size:12px;font-weight:700}
     .result{display:none;margin-top:15px;border-radius:11px;background:#fff3f4;padding:13px;color:#5b2529;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
-    .result.visible{display:block}
+    .result.visible{display:block}.result.error{background:#fff0f0;color:#8b1e27}.result.loading{background:#fff8e8;color:#75520b}.tracking-data{display:none}.tracking-data.visible{display:block}.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.info-item{padding:11px;background:#fafafa;border-radius:10px;min-width:0}.info-item span{display:block;color:var(--muted);font-size:10px;margin-bottom:5px}.info-item strong{display:block;font-size:12px;overflow-wrap:anywhere}.route{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}.route:last-child{border-bottom:0}.route-dot{width:10px;height:10px;border-radius:50%;background:var(--brand);margin-top:4px;flex:0 0 auto}.route-title{font-size:12px;font-weight:700;margin:0 0 4px}.route-desc,.route-time{font-size:10px;line-height:1.5;color:var(--muted);margin:0 0 3px;overflow-wrap:anywhere}
     .section-title{font-size:14px;font-weight:800;margin:22px 2px 12px}
     .empty{padding:26px 12px;text-align:center}
     .empty-icon{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;margin:0 auto 13px;background:#fff0f1;color:var(--brand);font-size:24px}
@@ -62,32 +62,149 @@
         <div class="result" id="result" role="status" aria-live="polite"></div>
       </section>
       <h2 class="section-title">Status Pengiriman</h2>
-      <section class="card empty">
+      <section class="card empty" id="empty-state">
         <div class="empty-icon"><i class="fa-solid fa-box-open"></i></div>
         <h2>Belum ada data pelacakan</h2>
-        <p>Masukkan nomor resi di atas. Status dan riwayat perjalanan paket akan muncul setelah API pelacakan dihubungkan.</p>
+        <p>Masukkan nomor resi di atas untuk melihat status dan riwayat perjalanan paket.</p>
       </section>
-      <div class="notice"><i class="fa-solid fa-circle-info"></i><span>Halaman ini belum terhubung ke API pelacakan J&amp;T Express. Nomor resi yang dimasukkan belum dikirim atau diverifikasi oleh layanan apa pun.</span></div>
+      <section class="card tracking-data" id="tracking-data" aria-live="polite"></section>
+      <div class="notice"><i class="fa-solid fa-circle-info"></i><span>Data pelacakan diambil dari layanan J&amp;T Abangg. Informasi ditampilkan sesuai data yang tersedia di sistem.</span></div>
     </main>
   </div>
   <script>
     (() => {
+      const API_URL = 'https://jezjupxysmctthvkrnpx.supabase.co/functions/v1/jnt-abangg-api';
       const form = document.getElementById('tracking-form');
       const input = document.getElementById('waybill');
       const result = document.getElementById('result');
-      const params = new URLSearchParams(location.search);
-      const initialWaybill = params.get('resi');
-      if (initialWaybill) input.value = initialWaybill;
-      form.addEventListener('submit', (event) => {
+      const emptyState = document.getElementById('empty-state');
+      const trackingData = document.getElementById('tracking-data');
+
+      const text = (value, fallback = '—') =>
+        value === null || value === undefined || value === '' ? fallback : String(value);
+
+      const money = value => {
+        if (value === null || value === undefined || value === '') return '—';
+        const amount = Number(String(value).replace(/[^0-9.-]/g, ''));
+        return Number.isFinite(amount)
+          ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount)
+          : String(value);
+      };
+
+      const addInfo = (container, label, value) => {
+        const item = document.createElement('div');
+        item.className = 'info-item';
+        const title = document.createElement('span');
+        title.textContent = label;
+        const detail = document.createElement('strong');
+        detail.textContent = text(value);
+        item.append(title, detail);
+        container.append(item);
+      };
+
+      const showMessage = (message, type = '') => {
+        result.textContent = message;
+        result.className = 'result visible' + (type ? ' ' + type : '');
+      };
+
+      const showShipment = data => {
+        trackingData.replaceChildren();
+        const summary = document.createElement('div');
+        summary.className = 'info-grid';
+        addInfo(summary, 'Nomor resi', data.waybill);
+        addInfo(summary, 'Status', data.status);
+        addInfo(summary, 'Layanan', data.service);
+        addInfo(summary, 'Berat', data.weight);
+        addInfo(summary, 'Pengirim', data.sender);
+        addInfo(summary, 'Penerima', data.recipient);
+        addInfo(summary, 'Asal', data.origin);
+        addInfo(summary, 'Tujuan', data.destination);
+        addInfo(summary, 'Biaya kirim', money(data.cost));
+        trackingData.append(summary);
+
+        const title = document.createElement('h3');
+        title.className = 'section-title';
+        title.textContent = 'Riwayat Perjalanan';
+        trackingData.append(title);
+
+        const timeline = Array.isArray(data.timeline) ? data.timeline : [];
+        if (!timeline.length) {
+          const empty = document.createElement('p');
+          empty.className = 'description';
+          empty.textContent = 'Belum ada riwayat perjalanan untuk nomor resi ini.';
+          trackingData.append(empty);
+        } else {
+          timeline.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'route';
+            const dot = document.createElement('span');
+            dot.className = 'route-dot';
+            const body = document.createElement('div');
+            const heading = document.createElement('p');
+            heading.className = 'route-title';
+            heading.textContent = text(item && item.title, 'Pembaruan status');
+            body.append(heading);
+            if (item && item.desc) {
+              const desc = document.createElement('p');
+              desc.className = 'route-desc';
+              desc.textContent = text(item.desc);
+              body.append(desc);
+            }
+            if (item && item.time) {
+              const time = document.createElement('p');
+              time.className = 'route-time';
+              time.textContent = text(item.time);
+              body.append(time);
+            }
+            row.append(dot, body);
+            trackingData.append(row);
+          });
+        }
+        trackingData.classList.add('visible');
+        emptyState.style.display = 'none';
+      };
+
+      async function track(waybill) {
+        showMessage('Sedang mencari data pelacakan…', 'loading');
+        trackingData.classList.remove('visible');
+        emptyState.style.display = '';
+        try {
+          const response = await fetch(API_URL + '?waybill=' + encodeURIComponent(waybill), {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' }
+          });
+          let payload;
+          try { payload = await response.json(); } catch { payload = {}; }
+          if (!response.ok) {
+            if (response.status === 404) throw new Error('Nomor resi tidak ditemukan. Periksa kembali nomor resi Anda.');
+            if (response.status === 400) throw new Error(payload.error || 'Format nomor resi tidak valid.');
+            throw new Error(payload.error || 'Layanan pelacakan gagal merespons. Coba kembali.');
+          }
+          if (!payload.data) throw new Error('Data pelacakan tidak tersedia.');
+          showShipment(payload.data);
+          showMessage('Data pelacakan berhasil ditemukan.');
+        } catch (error) {
+          showMessage(error instanceof TypeError
+            ? 'Tidak dapat terhubung ke layanan pelacakan. Periksa koneksi internet lalu coba kembali.'
+            : (error.message || 'Terjadi kesalahan saat melacak paket.'), 'error');
+        }
+      }
+
+      form.addEventListener('submit', event => {
         event.preventDefault();
         const waybill = input.value.trim();
         if (!waybill) {
           input.focus();
           return;
         }
-        result.textContent = 'Nomor resi ' + waybill + ' siap dilacak. Integrasi API pelacakan belum tersedia.';
-        result.classList.add('visible');
+        track(waybill);
       });
+
+      const initialWaybill = new URLSearchParams(location.search).get('resi');
+      if (initialWaybill) {
+        input.value = initialWaybill;
+        track(initialWaybill.trim());
+      }
     })();
   </script>
 </body>
