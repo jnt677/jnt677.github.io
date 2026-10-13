@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ff5a00">
+  <title>J&T Express Mobile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body, #root { width: 100%; height: 100%; margin: 0; }
+    html, body { overflow: hidden; }
+    body { font-family: Inter, Arial, sans-serif; color: #222; background: #ededed; }
+    button { font: inherit; cursor: pointer; }
+    #root {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 500px;
+      height: 100%;
+      margin-inline: auto;
+      overflow: hidden;
+      background: #f5f5f5;
+      box-shadow: 0 0 28px rgba(0,0,0,.08);
+      position: relative;
+    }
+    .app-header {
+      flex: 0 0 auto; height: 64px; display: flex; align-items: center;
+      justify-content: space-between; padding: 0 18px; background: #fff;
+      border-bottom: 1px solid #eee; z-index: 2;
+    }
+    .brand-logo { width: 112px; max-height: 40px; object-fit: contain; object-position: left center; }
+    .icon-btn { width: 40px; height: 40px; border: 0; border-radius: 50%; background: #fff5ef; color: #ff5a00; font-size: 18px; position: relative; }
+    .notif-dot { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: #e53935; top: 7px; right: 8px; border: 1px solid white; }
+    .main-content { flex: 1 1 0%; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior-y: contain; padding: 18px 16px 24px; }
+    .page { display: none; animation: appear .18s ease-out; }
+    .page.active { display: block; }
+    @keyframes appear { from { opacity: .6; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+    .greeting { color: #666; font-size: 13px; margin: 0 0 5px; }
+    h1 { font-size: 23px; line-height: 1.25; margin: 0 0 18px; font-weight: 800; }
+    h2 { font-size: 16px; margin: 0; }
+    .hero { border-radius: 18px; padding: 20px; color: white; background: linear-gradient(135deg,#ff6b16,#f04400); margin-bottom: 22px; }
+    .hero .eyebrow { margin: 0 0 8px; font-size: 12px; opacity: .9; }
+    .hero h2 { font-size: 21px; line-height: 1.3; max-width: 250px; margin-bottom: 8px; }
+    .hero p { margin: 0; font-size: 12px; opacity: .9; }
+    .section-heading { display: flex; align-items: center; justify-content: space-between; margin: 0 0 12px; }
+    .section-heading span { color: #ff5a00; font-size: 12px; font-weight: 700; }
+    .quick-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; margin-bottom: 24px; }
+    .quick-action { min-width: 0; border: 0; background: transparent; padding: 0; color: #333; font-size: 11px; font-weight: 600; }
+    .quick-icon { width: 52px; height: 52px; display: grid; place-items: center; margin: 0 auto 8px; border-radius: 16px; background: #fff; color: #ff5a00; font-size: 20px; box-shadow: 0 3px 12px rgba(0,0,0,.04); }
+    .card { background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 14px; box-shadow: 0 3px 14px rgba(0,0,0,.035); }
+    .tracking-form { display: flex; gap: 8px; margin-top: 14px; }
+    .tracking-form input { min-width: 0; flex: 1; border: 1px solid #e8e8e8; background: #fafafa; border-radius: 10px; padding: 12px; outline-color: #ff5a00; font-size: 13px; }
+    .primary-btn { border: 0; border-radius: 10px; background: #ff5a00; color: white; padding: 0 15px; min-height: 42px; font-size: 13px; font-weight: 700; }
+    .list-row { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid #f0f0f0; }
+    .list-row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .row-icon { width: 42px; height: 42px; display: grid; place-items: center; flex: 0 0 42px; border-radius: 13px; background: #fff1e8; color: #ff5a00; }
+    .row-copy { flex: 1; min-width: 0; }
+    .row-copy strong { display: block; font-size: 13px; margin-bottom: 4px; }
+    .row-copy small { color: #888; font-size: 11px; }
+    .muted { color: #888; font-size: 12px; line-height: 1.5; }
+    .empty-state { text-align: center; padding: 40px 14px; color: #888; }
+    .empty-state i { font-size: 34px; color: #ffb184; margin-bottom: 12px; }
+    .empty-state h2 { color: #333; margin-bottom: 7px; }
+    .profile-avatar { width: 70px; height: 70px; border-radius: 50%; background: #fff0e6; color: #ff5a00; display: grid; place-items: center; font-size: 28px; margin: 4px auto 12px; }
+    .profile-top { text-align: center; padding: 20px 12px; }
+    .profile-top h2 { margin-bottom: 5px; }
+    .bottom-nav { flex: 0 0 auto; min-height: 68px; display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); align-items: center; background: #fff; border-top: 1px solid #eee; padding: 5px 5px max(5px,env(safe-area-inset-bottom)); z-index: 3; }
+    .nav-item { border: 0; background: transparent; color: #999; min-width: 0; height: 55px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; font-size: 10px; font-weight: 600; }
+    .nav-item i { font-size: 18px; }
+    .nav-item.active { color: #ff5a00; }
+    .nav-item.scan-item { color: #ff5a00; }
+    .scan-fab { width: 52px; height: 52px; margin-top: -28px; display: grid; place-items: center; border: 4px solid #f5f5f5; border-radius: 18px; color: white; background: #ff5a00; box-shadow: 0 4px 12px rgba(255,90,0,.28); font-size: 20px; }
+    .scan-item span { margin-top: -1px; }
+    .toast { position: absolute; left: 16px; right: 16px; bottom: 82px; z-index: 5; background: #252525; color: white; border-radius: 12px; padding: 13px 15px; font-size: 12px; box-shadow: 0 6px 20px #0002; display: none; }
+    .toast.show { display: block; }
+    @media (min-width: 501px) { #root { border-left: 1px solid #e6e6e6; border-right: 1px solid #e6e6e6; } }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <header class="app-header">
+      <img class="brand-logo" src="https://uploads.onecompiler.io/44ur9phmj/1791914215150/1519.HK.D-b" alt="J&T Express" onerror="this.style.display='none';document.getElementById('brand-fallback').style.display='block'">
+      <strong id="brand-fallback" style="display:none;color:#ff5a00;font-size:20px">J&T EXPRESS</strong>
+      <button class="icon-btn" id="notification-btn" aria-label="Notifikasi"><i class="fa-regular fa-bell"></i><span class="notif-dot"></span></button>
+    </header>
+
+    <main class="main-content" id="main-content">
+      <section class="page active" id="page-home" data-page="home">
+        <p class="greeting">Selamat datang di</p>
+        <h1>J&T Express Mobile</h1>
+        <div class="hero"><p class="eyebrow">PENGIRIMAN MUDAH & CEPAT</p><h2>Kirim paket jadi lebih praktis.</h2><p>Lacak kiriman dan akses layanan dalam satu aplikasi.</p></div>
+        <div class="section-heading"><h2>Layanan Cepat</h2></div>
+        <div class="quick-grid">
+          <button class="quick-action" data-go="order"><span class="quick-icon"><i class="fa-solid fa-box"></i></span>Buat Pesanan</button>
+          <button class="quick-action" data-go="tracking"><span class="quick-icon"><i class="fa-solid fa-location-dot"></i></span>Cek Resi</button>
+          <button class="quick-action" data-go="scan"><span class="quick-icon"><i class="fa-solid fa-qrcode"></i></span>Scan</button>
+          <button class="quick-action" data-go="outlet"><span class="quick-icon"><i class="fa-solid fa-shop"></i></span>Outlet</button>
+        </div>
+        <div class="section-heading"><h2>Lacak Kiriman</h2></div>
+        <div class="card">
+          <p class="muted" style="margin:0">Masukkan nomor resi untuk melihat status kiriman.</p>
+          <form class="tracking-form" id="tracking-form"><input id="tracking-number" type="text" placeholder="Masukkan nomor resi" aria-label="Nomor resi"><button class="primary-btn" type="submit">Lacak</button></form>
+        </div>
+        <div class="section-heading"><h2>Informasi</h2><span id="notification-link" role="button" tabindex="0">Lihat</span></div>
+        <div class="card"><div class="list-row"><span class="row-icon"><i class="fa-solid fa-truck-fast"></i></span><div class="row-copy"><strong>Layanan pengiriman</strong><small>Pantau perjalanan paket Anda.</small></div><i class="fa-solid fa-chevron-right muted"></i></div></div>
+      </section>
+
+      <section class="page" id="page-order" data-page="order">
+        <p class="greeting">Kelola pengiriman Anda</p><h1>Pesanan</h1>
+        <div class="card"><div class="section-heading"><h2>Pesanan Saya</h2></div><div class="empty-state"><i class="fa-solid fa-box-open"></i><h2>Belum ada pesanan</h2><p class="muted">Daftar pesanan akan ditampilkan di halaman ini.</p></div></div>
+      </section>
+
+      <section class="page" id="page-scan" data-page="scan">
+        <p class="greeting">Pindai kode kiriman</p><h1>Scan Resi</h1>
+        <div class="card"><div class="empty-state"><i class="fa-solid fa-camera"></i><h2>Siap untuk scan</h2><p class="muted">Fitur kamera dan pembacaan barcode/QR belum diintegrasikan.</p><button class="primary-btn" id="camera-btn" type="button" style="margin-top:12px">Buka Kamera</button></div></div>
+      </section>
+
+      <section class="page" id="page-outlet" data-page="outlet">
+        <p class="greeting">Temukan lokasi layanan</p><h1>Outlet</h1>
+        <div class="card"><div class="empty-state"><i class="fa-solid fa-shop"></i><h2>Temukan Outlet J&T</h2><p class="muted">Informasi outlet akan ditampilkan di halaman ini.</p></div></div>
+      </section>
+
+      <section class="page" id="page-profile" data-page="profile">
+        <p class="greeting">Akun Anda</p><h1>Profil</h1>
+        <div class="card profile-top"><div class="profile-avatar"><i class="fa-solid fa-user"></i></div><h2>Pengguna</h2><p class="muted" style="margin:6px 0 0">Profil belum terhubung ke backend.</p></div>
+        <div class="card"><div class="list-row"><span class="row-icon"><i class="fa-regular fa-user"></i></span><div class="row-copy"><strong>Informasi Profil</strong><small>Kelola informasi akun</small></div><i class="fa-solid fa-chevron-right muted"></i></div><div class="list-row"><span class="row-icon"><i class="fa-solid fa-gear"></i></span><div class="row-copy"><strong>Pengaturan</strong><small>Preferensi aplikasi</small></div><i class="fa-solid fa-chevron-right muted"></i></div></div>
+      </section>
+
+      <section class="page" id="page-tracking" data-page="tracking">
+        <p class="greeting">Informasi pengiriman</p><h1>Pelacakan</h1>
+        <div class="card"><h2>Nomor Resi</h2><form class="tracking-form" id="tracking-form-page"><input id="tracking-number-page" type="text" placeholder="Masukkan nomor resi" aria-label="Nomor resi"><button class="primary-btn" type="submit">Lacak</button></form><div id="tracking-result" class="muted" style="margin-top:14px">Masukkan nomor resi untuk melanjutkan.</div></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navigasi utama">
+      <button class="nav-item active" data-nav="home"><i class="fa-solid fa-house"></i><span>Home</span></button>
+      <button class="nav-item" data-nav="order"><i class="fa-solid fa-box"></i><span>Order</span></button>
+      <button class="nav-item scan-item" data-nav="scan"><span class="scan-fab"><i class="fa-solid fa-qrcode"></i></span><span>Scan</span></button>
+      <button class="nav-item" data-nav="outlet"><i class="fa-solid fa-shop"></i><span>Outlet</span></button>
+      <button class="nav-item" data-nav="profile"><i class="fa-solid fa-user"></i><span>Profile</span></button>
+    </nav>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+  <script src="./script.js"></script>
+</body>
+</html>
