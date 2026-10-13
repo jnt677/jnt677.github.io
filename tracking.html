@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e60012">
+  <title>Pelacakan Paket - J&T Express</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root{--brand:#e60012;--ink:#242424;--muted:#858585;--canvas:#f6f6f8;--line:#ededee}
+    *{box-sizing:border-box}
+    html,body,#root{width:100%;height:100%;margin:0}
+    html,body{overflow:hidden}
+    body{font-family:Inter,Arial,sans-serif;background:#e9e9eb;color:var(--ink)}
+    button,input{font:inherit}
+    button{cursor:pointer}
+    #root{max-width:500px;height:100%;margin:auto;display:flex;flex-direction:column;overflow:hidden;background:var(--canvas);box-shadow:0 0 30px #00000012}
+    .header{height:62px;flex:0 0 auto;display:flex;align-items:center;gap:13px;padding:0 18px;background:var(--brand);color:#fff}
+    .back{width:36px;height:36px;border:0;background:#ffffff1c;color:#fff;border-radius:50%;font-size:16px}
+    .brand{font-weight:800;font-size:16px;letter-spacing:-.4px}
+    .brand small{display:block;font-size:9px;font-weight:500;letter-spacing:.5px;margin-top:3px;opacity:.9}
+    main{flex:1;min-height:0;overflow:auto;padding:22px 16px 30px}
+    .eyebrow{margin:0 0 6px;color:var(--muted);font-size:12px}
+    h1{margin:0 0 19px;font-size:24px;letter-spacing:-.6px}
+    .card{background:#fff;border:1px solid #f0f0f1;border-radius:16px;padding:17px;margin-bottom:15px;box-shadow:0 4px 14px #16161604}
+    .card-title{font-size:14px;font-weight:800;margin:0 0 7px}
+    .description{margin:0 0 15px;color:var(--muted);font-size:11px;line-height:1.5}
+    form{display:flex;gap:8px}
+    input{min-width:0;flex:1;border:1px solid #e8e8ea;border-radius:10px;padding:12px;font-size:12px;outline-color:var(--brand);background:#fafafa}
+    .primary{border:0;border-radius:10px;background:var(--brand);color:#fff;padding:0 16px;font-size:12px;font-weight:700}
+    .result{display:none;margin-top:15px;border-radius:11px;background:#fff3f4;padding:13px;color:#5b2529;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+    .result.visible{display:block}
+    .section-title{font-size:14px;font-weight:800;margin:22px 2px 12px}
+    .empty{padding:26px 12px;text-align:center}
+    .empty-icon{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;margin:0 auto 13px;background:#fff0f1;color:var(--brand);font-size:24px}
+    .empty h2{font-size:14px;margin:0 0 7px}
+    .empty p{margin:0 auto;color:var(--muted);font-size:11px;line-height:1.6;max-width:280px}
+    .notice{display:flex;align-items:flex-start;gap:10px;color:#777;font-size:10px;line-height:1.5;padding:2px 3px}
+    .notice i{color:var(--brand);margin-top:2px}
+    @media(min-width:501px){#root{border-left:1px solid #e6e6e6;border-right:1px solid #e6e6e6}}
+  </style>
+</head>
+<body>
+  <div id="root">
+    <header class="header">
+      <button class="back" type="button" aria-label="Kembali ke halaman utama" onclick="location.href='./index.html'"><i class="fa-solid fa-arrow-left"></i></button>
+      <div class="brand">J&amp;T EXPRESS<small>PELATACAKAN KIRIMAN</small></div>
+    </header>
+    <main>
+      <p class="eyebrow">Informasi pengiriman</p>
+      <h1>Lacak Paket</h1>
+      <section class="card">
+        <h2 class="card-title">Masukkan nomor resi</h2>
+        <p class="description">Masukkan nomor resi J&amp;T Express untuk memulai pelacakan.</p>
+        <form id="tracking-form">
+          <input id="waybill" type="text" placeholder="Contoh: JP1234567890" aria-label="Nomor resi" autocomplete="off" required>
+          <button class="primary" type="submit">Lacak</button>
+        </form>
+        <div class="result" id="result" role="status" aria-live="polite"></div>
+      </section>
+      <h2 class="section-title">Status Pengiriman</h2>
+      <section class="card empty">
+        <div class="empty-icon"><i class="fa-solid fa-box-open"></i></div>
+        <h2>Belum ada data pelacakan</h2>
+        <p>Masukkan nomor resi di atas. Status dan riwayat perjalanan paket akan muncul setelah API pelacakan dihubungkan.</p>
+      </section>
+      <div class="notice"><i class="fa-solid fa-circle-info"></i><span>Halaman ini belum terhubung ke API pelacakan J&amp;T Express. Nomor resi yang dimasukkan belum dikirim atau diverifikasi oleh layanan apa pun.</span></div>
+    </main>
+  </div>
+  <script>
+    (() => {
+      const form = document.getElementById('tracking-form');
+      const input = document.getElementById('waybill');
+      const result = document.getElementById('result');
+      const params = new URLSearchParams(location.search);
+      const initialWaybill = params.get('resi');
+      if (initialWaybill) input.value = initialWaybill;
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const waybill = input.value.trim();
+        if (!waybill) {
+          input.focus();
+          return;
+        }
+        result.textContent = 'Nomor resi ' + waybill + ' siap dilacak. Integrasi API pelacakan belum tersedia.';
+        result.classList.add('visible');
+      });
+    })();
+  </script>
+</body>
+</html>
