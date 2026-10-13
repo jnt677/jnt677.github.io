@@ -79,16 +79,48 @@
       const result = document.getElementById('result');
       const emptyState = document.getElementById('empty-state');
       const trackingData = document.getElementById('tracking-data');
+      const trackButton = form.querySelector('button[type="submit"]');
+      let activeController = null;
 
       const text = (value, fallback = '—') =>
         value === null || value === undefined || value === '' ? fallback : String(value);
 
       const money = value => {
         if (value === null || value === undefined || value === '') return '—';
-        const amount = Number(String(value).replace(/[^0-9.-]/g, ''));
+        if (typeof value === 'number') {
+          return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(value);
+        }
+
+        const raw = String(value).trim();
+        const cleaned = raw.replace(/[^0-9,.-]/g, '');
+        if (!cleaned || !/[0-9]/.test(cleaned)) return raw;
+
+        // Format angka Indonesia: 40.800 / 40,800 dianggap pemisah ribuan.
+        // Jika titik dan koma muncul bersamaan, pemisah terakhir dianggap desimal.
+        let normalized = cleaned;
+        const lastDot = normalized.lastIndexOf('.');
+        const lastComma = normalized.lastIndexOf(',');
+        if (lastDot !== -1 && lastComma !== -1) {
+          const decimalSeparator = lastDot > lastComma ? '.' : ',';
+          const thousandsSeparator = decimalSeparator === '.' ? ',' : '.';
+          normalized = normalized.split(thousandsSeparator).join('');
+          if (decimalSeparator === ',') normalized = normalized.replace(',', '.');
+        } else {
+          const separator = lastDot !== -1 ? '.' : (lastComma !== -1 ? ',' : '');
+          if (separator) {
+            const parts = normalized.split(separator);
+            if (parts.length > 2 || (parts.length === 2 && parts[1].length === 3)) {
+              normalized = parts.join('');
+            } else if (separator === ',') {
+              normalized = normalized.replace(',', '.');
+            }
+          }
+        }
+
+        const amount = Number(normalized);
         return Number.isFinite(amount)
           ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount)
-          : String(value);
+          : raw;
       };
 
       const addInfo = (container, label, value) => {
@@ -165,28 +197,51 @@
       };
 
       async function track(waybill) {
+        if (activeController) activeController.abort();
+        const controller = new AbortController();
+        activeController = controller;
+        const timeout = setTimeout(() => controller.abort(), 12000);
+
         showMessage('Sedang mencari data pelacakan…', 'loading');
         trackingData.classList.remove('visible');
         emptyState.style.display = '';
+        trackButton.disabled = true;
+        trackButton.textContent = 'Memuat…';
+
         try {
           const response = await fetch(API_URL + '?waybill=' + encodeURIComponent(waybill), {
             method: 'GET',
-            headers: { 'Accept': 'application/json' }
+            headers: { 'Accept': 'application/json' },
+            signal: controller.signal
           });
           let payload;
           try { payload = await response.json(); } catch { payload = {}; }
+
           if (!response.ok) {
             if (response.status === 404) throw new Error('Nomor resi tidak ditemukan. Periksa kembali nomor resi Anda.');
             if (response.status === 400) throw new Error(payload.error || 'Format nomor resi tidak valid.');
             throw new Error(payload.error || 'Layanan pelacakan gagal merespons. Coba kembali.');
           }
-          if (!payload.data) throw new Error('Data pelacakan tidak tersedia.');
+          if (!payload || !payload.data || typeof payload.data !== 'object' || Array.isArray(payload.data)) {
+            throw new Error('Format data pelacakan dari server tidak sesuai.');
+          }
+          if (controller.signal.aborted) return;
           showShipment(payload.data);
           showMessage('Data pelacakan berhasil ditemukan.');
         } catch (error) {
-          showMessage(error instanceof TypeError
-            ? 'Tidak dapat terhubung ke layanan pelacakan. Periksa koneksi internet lalu coba kembali.'
-            : (error.message || 'Terjadi kesalahan saat melacak paket.'), 'error');
+          if (controller.signal.aborted && activeController !== controller) return;
+          showMessage(error && error.name === 'AbortError'
+            ? 'Permintaan pelacakan melewati batas waktu. Silakan coba kembali.'
+            : error instanceof TypeError
+              ? 'Tidak dapat terhubung ke layanan pelacakan. Periksa koneksi internet lalu coba kembali.'
+              : (error.message || 'Terjadi kesalahan saat melacak paket.'), 'error');
+        } finally {
+          clearTimeout(timeout);
+          if (activeController === controller) {
+            activeController = null;
+            trackButton.disabled = false;
+            trackButton.textContent = 'Lacak';
+          }
         }
       }
 
