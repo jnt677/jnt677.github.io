@@ -1,0 +1,2604 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Pengiriman</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ==========================================================================
+       DESIGN TOKENS & RESET (MOBILE-FIRST, MAX-WIDTH 500PX, J&T EXPRESS BRAND)
+       ========================================================================== */
+    :root {
+      --jt-red: #E60012;
+      --jt-red-dark: #B8000E;
+      --jt-red-soft: #FFF1F2;
+      --jt-red-border: #FECDD3;
+      --bg-app: #F3F4F6;
+      --bg-card: #FFFFFF;
+      --text-primary: #111827;
+      --text-secondary: #4B5563;
+      --text-muted: #6B7280;
+      --border-color: #E5E7EB;
+      --input-bg: #F9FAFB;
+      --input-disabled: #F3F4F6;
+      --success-bg: #ECFDF5;
+      --success-text: #065F46;
+      --success-border: #A7F3D0;
+      --warning-bg: #FFFBEB;
+      --warning-text: #92400E;
+      --warning-border: #FDE68A;
+      --error-bg: #FEF2F2;
+      --error-text: #991B1B;
+      --error-border: #FECACA;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-sm: 8px;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #E5E7EB;
+      color: var(--text-primary);
+      line-height: 1.5;
+      font-size: 14px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Mobile-only container: max-width 500px, no 100vh/100dvh */
+    .app-shell {
+      width: 100%;
+      max-width: 500px;
+      background-color: var(--bg-app);
+      padding-bottom: 92px;
+      box-shadow: 0 0 24px rgba(0, 0, 0, 0.08);
+    }
+
+    /* ==========================================================================
+       HEADER & MODE INDICATOR
+       ========================================================================== */
+    .app-header {
+      background: linear-gradient(135deg, var(--jt-red) 0%, var(--jt-red-dark) 100%);
+      color: #FFFFFF;
+      padding: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: 0 2px 8px rgba(230, 0, 18, 0.25);
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      background: #FFFFFF;
+      color: var(--jt-red);
+      font-weight: 800;
+      font-size: 13px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .app-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .mode-pill {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      white-space: nowrap;
+    }
+
+    .header-sub {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.9);
+      gap: 8px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-header {
+      background: rgba(255, 255, 255, 0.16);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-header:active {
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    /* ==========================================================================
+       QUICK SEARCH / LOAD RESI BAR
+       ========================================================================== */
+    .quick-bar {
+      background: var(--bg-card);
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .quick-bar-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .quick-input {
+      flex: 1;
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-family: inherit;
+      background: var(--input-bg);
+    }
+
+    .quick-input:focus {
+      outline: none;
+      border-color: var(--jt-red);
+      background: #FFFFFF;
+    }
+
+    .btn-outline-red {
+      height: 40px;
+      padding: 0 14px;
+      background: var(--jt-red-soft);
+      color: var(--jt-red);
+      border: 1px solid var(--jt-red-border);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-outline-red:active {
+      background: #FFE4E6;
+    }
+
+    /* ==========================================================================
+       FEEDBACK BANNER (ERROR, WARNING, SUCCESS)
+       ========================================================================== */
+    .banner-area {
+      padding: 12px 14px 0;
+      display: none;
+    }
+
+    .banner-area.visible {
+      display: block;
+    }
+
+    .alert-box {
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      font-size: 13px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .alert-box.success {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border-color: var(--success-border);
+    }
+
+    .alert-box.warning {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      border-color: var(--warning-border);
+    }
+
+    .alert-box.error {
+      background: var(--error-bg);
+      color: var(--error-text);
+      border-color: var(--error-border);
+    }
+
+    .alert-title {
+      font-weight: 700;
+      margin-bottom: 2px;
+      display: block;
+    }
+
+    .alert-close {
+      background: none;
+      border: none;
+      font-size: 18px;
+      line-height: 1;
+      color: inherit;
+      cursor: pointer;
+      padding: 2px 4px;
+    }
+
+    /* ==========================================================================
+       ACCORDION SECTIONS (SINGLE COLUMN)
+       ========================================================================== */
+    .content-body {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .accordion-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .accordion-header {
+      width: 100%;
+      background: var(--bg-card);
+      border: none;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+      cursor: pointer;
+      gap: 12px;
+    }
+
+    .accordion-header:active {
+      background: #F9FAFB;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: var(--jt-red-soft);
+      color: var(--jt-red);
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .chevron-icon {
+      width: 18px;
+      height: 18px;
+      color: var(--text-muted);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .accordion-card.open .chevron-icon {
+      transform: rotate(180deg);
+      color: var(--jt-red);
+    }
+
+    .accordion-card.open .accordion-header {
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .accordion-panel {
+      display: none;
+      padding: 16px;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .accordion-card.open .accordion-panel {
+      display: flex;
+    }
+
+    /* ==========================================================================
+       FORM ELEMENTS & RUPIAH DISPLAY
+       ========================================================================== */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .req-mark {
+      color: var(--jt-red);
+      margin-left: 2px;
+    }
+
+    .schema-tag {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      background: #F3F4F6;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    .form-control {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text-primary);
+      background-color: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    textarea.form-control {
+      min-height: 76px;
+      resize: vertical;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--jt-red);
+      background-color: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(230, 0, 18, 0.1);
+    }
+
+    .form-control:disabled,
+    .form-control[readonly] {
+      background-color: var(--input-disabled);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      border-color: #E5E7EB;
+    }
+
+    .helper-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .rupiah-preview {
+      font-weight: 600;
+      color: var(--jt-red);
+    }
+
+    /* ==========================================================================
+       SWITCH / BOOLEAN TOGGLE ROWS
+       ========================================================================== */
+    .toggle-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toggle-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      gap: 12px;
+    }
+
+    .toggle-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .toggle-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .toggle-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #D1D5DB;
+      transition: 0.2s;
+      border-radius: 999px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #FFFFFF;
+      transition: 0.2s;
+      border-radius: 50%;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .switch input:checked + .slider {
+      background-color: var(--jt-red);
+    }
+
+    .switch input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    /* Refund Lock Banner */
+    .lock-notice {
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      color: var(--warning-text);
+      font-size: 12px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .lock-notice.visible {
+      display: block;
+    }
+
+    /* Metadata Footer inside Section 1 */
+    .meta-strip {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 10px 12px;
+      background: #F9FAFB;
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       SECTION 6 — RIWAYAT PENGIRIMAN (TRAVEL HISTORY CARDS & FORM)
+       ========================================================================== */
+    .history-form-box {
+      background: #FFF8F8;
+      border: 1px solid var(--jt-red-border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .history-form-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .history-form-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--jt-red-dark);
+    }
+
+    .history-btn-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      min-height: 42px;
+      background: #FFFFFF;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-red-sm {
+      flex: 2;
+      min-height: 42px;
+      background: var(--jt-red);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-red-sm:disabled,
+    .btn-secondary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .history-list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+
+    .history-count {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .history-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .history-card {
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--jt-red);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      background: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .history-card.pending-local {
+      border-left-color: #D97706;
+      background: #FFFBEB;
+    }
+
+    .history-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .history-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .history-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #FEF3C7;
+      color: #92400E;
+      white-space: nowrap;
+    }
+
+    .history-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .history-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .history-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px solid #F3F4F6;
+    }
+
+    .btn-xs {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background: #F9FAFB;
+      color: var(--text-primary);
+    }
+
+    .btn-xs.danger {
+      background: #FEF2F2;
+      color: #B91C1C;
+      border-color: #FECACA;
+    }
+
+    .empty-history {
+      text-align: center;
+      padding: 20px 12px;
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    /* ==========================================================================
+       STICKY BOTTOM SAVE BAR
+       ========================================================================== */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 500px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border-color);
+      padding: 12px 14px;
+      z-index: 40;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .btn-primary-save {
+      width: 100%;
+      min-height: 48px;
+      background: var(--jt-red);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn-primary-save:active {
+      background: var(--jt-red-dark);
+    }
+
+    .btn-primary-save:disabled {
+      background: #9CA3AF;
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #FFFFFF;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+      display: none;
+    }
+
+    .spinner.active {
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ==========================================================================
+       CUSTOM MODAL (CONFIRMATION / API CONFIG) - NO NATIVE ALERT/CONFIRM
+       ========================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 60;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 440px;
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .modal-body {
+      font-size: 13px;
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="header-top">
+        <div class="brand-group">
+          <span class="brand-badge">J&amp;T</span>
+          <h1 class="app-title">Data Pengiriman</h1>
+        </div>
+        <span id="modeBadge" class="mode-pill">CREATE MODE</span>
+      </div>
+      <div class="header-sub">
+        <span id="activeResiSubtitle">Resi Baru (Belum Tersimpan)</span>
+        <div class="header-actions">
+          <button type="button" id="btnNewMode" class="btn-header">+ Resi Baru</button>
+          <button type="button" id="btnOpenConfig" class="btn-header">Koneksi</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- QUICK LOAD BAR (SEARCH EXISTING RESI TO SWITCH TO EDIT MODE) -->
+    <div class="quick-bar">
+      <div class="quick-bar-row">
+        <input
+          type="text"
+          id="searchResiInput"
+          class="quick-input"
+          placeholder="Cari nomor resi untuk Edit Mode..."
+          autocomplete="off"
+        />
+        <button type="button" id="btnLoadResi" class="btn-outline-red">Muat Data</button>
+      </div>
+    </div>
+
+    <!-- FEEDBACK BANNER -->
+    <div id="bannerArea" class="banner-area" role="status" aria-live="polite">
+      <div id="alertBox" class="alert-box">
+        <div>
+          <span id="alertTitle" class="alert-title">Informasi</span>
+          <span id="alertMessage"></span>
+        </div>
+        <button type="button" id="btnCloseAlert" class="alert-close" aria-label="Tutup pesan">&times;</button>
+      </div>
+    </div>
+
+    <!-- MAIN FORM CONTAINER (SINGLE COLUMN ACCORDIONS) -->
+    <form id="resiForm" class="content-body" novalidate>
+      <!-- ====================================================================
+           SECTION 1 — Informasi Resi
+           ==================================================================== -->
+      <section class="accordion-card open" data-section="1">
+        <button type="button" class="accordion-header" aria-expanded="true">
+          <div class="section-title-wrap">
+            <span class="section-num">1</span>
+            <span class="section-title">Informasi Resi</span>
+          </div>
+          <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="form-group">
+            <label class="form-label" for="nomor_resi">
+              <span>Nomor Resi <span class="req-mark">*</span></span>
+              <span class="schema-tag">nomor_resi</span>
+            </label>
+            <input
+              type="text"
+              id="nomor_resi"
+              name="nomor_resi"
+              class="form-control"
+              placeholder="Contoh: JP1234567890"
+              required
+              autocomplete="off"
+            />
+            <div class="helper-row">
+              <span id="resiLockHint">Primary key resi (tidak dapat diubah setelah dibuat).</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="date">
+              <span>Tanggal Pengiriman</span>
+              <span class="schema-tag">date</span>
+            </label>
+            <input type="datetime-local" id="date" name="date" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="estimasi_tiba">
+              <span>Estimasi Tiba</span>
+              <span class="schema-tag">estimasi_tiba</span>
+            </label>
+            <input type="datetime-local" id="estimasi_tiba" name="estimasi_tiba" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="paket">
+              <span>Nama Paket</span>
+              <span class="schema-tag">paket</span>
+            </label>
+            <input
+              type="text"
+              id="paket"
+              name="paket"
+              class="form-control"
+              placeholder="Contoh: EZ / Dokumen / Elektronik"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="weight">
+              <span>Berat (kg)</span>
+              <span class="schema-tag">weight</span>
+            </label>
+            <input
+              type="number"
+              id="weight"
+              name="weight"
+              class="form-control"
+              step="0.001"
+              min="0"
+              inputmode="decimal"
+              placeholder="0.000"
+            />
+            <div class="helper-row">
+              <span>Maksimal 3 angka di belakang koma (numeric 10,3)</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="biaya_kirim">
+              <span>Biaya Kirim (IDR)</span>
+              <span class="schema-tag">biaya_kirim</span>
+            </label>
+            <input
+              type="number"
+              id="biaya_kirim"
+              name="biaya_kirim"
+              class="form-control"
+              step="1"
+              min="0"
+              inputmode="numeric"
+              placeholder="0"
+            />
+            <div class="helper-row">
+              <span>Tampilan Rupiah:</span>
+              <span id="biaya_kirim_rp" class="rupiah-preview">Rp 0</span>
+            </div>
+          </div>
+
+          <div id="timestampMetaBox" class="meta-strip" style="display: none;">
+            <div><strong>Created At:</strong> <span id="metaCreatedAt">-</span></div>
+            <div><strong>Updated At:</strong> <span id="metaUpdatedAt">-</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SECTION 2 — Pengirim
+           ==================================================================== -->
+      <section class="accordion-card" data-section="2">
+        <button type="button" class="accordion-header" aria-expanded="false">
+          <div class="section-title-wrap">
+            <span class="section-num">2</span>
+            <span class="section-title">Pengirim</span>
+          </div>
+          <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="form-group">
+            <label class="form-label" for="pengirim_nama">
+              <span>Nama Pengirim</span>
+              <span class="schema-tag">pengirim_nama</span>
+            </label>
+            <input type="text" id="pengirim_nama" name="pengirim_nama" class="form-control" placeholder="Nama lengkap pengirim" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="pengirim_telepon">
+              <span>Telepon Pengirim</span>
+              <span class="schema-tag">pengirim_telepon</span>
+            </label>
+            <input type="tel" id="pengirim_telepon" name="pengirim_telepon" class="form-control" placeholder="08xxxxxxxxxx" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="pengirim_alamat">
+              <span>Alamat Pengirim</span>
+              <span class="schema-tag">pengirim_alamat</span>
+            </label>
+            <textarea id="pengirim_alamat" name="pengirim_alamat" class="form-control" placeholder="Alamat lengkap asal pengiriman"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="pengirim_label">
+              <span>Label Pengirim</span>
+              <span class="schema-tag">pengirim_label</span>
+            </label>
+            <input type="text" id="pengirim_label" name="pengirim_label" class="form-control" placeholder="Contoh: Gudang Utama / Toko" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="pengirim_gateway">
+              <span>Gateway Pengirim</span>
+              <span class="schema-tag">pengirim_gateway</span>
+            </label>
+            <input type="text" id="pengirim_gateway" name="pengirim_gateway" class="form-control" placeholder="Contoh: CGK / SUB / UPG" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="pengirim_coordinate_lat">
+              <span>Latitude Pengirim</span>
+              <span class="schema-tag">pengirim_coordinate_lat</span>
+            </label>
+            <input
+              type="number"
+              id="pengirim_coordinate_lat"
+              name="pengirim_coordinate_lat"
+              class="form-control"
+              step="any"
+              inputmode="decimal"
+              placeholder="-6.200000"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="pengirim_coordinate_lng">
+              <span>Longitude Pengirim</span>
+              <span class="schema-tag">pengirim_coordinate_lng</span>
+            </label>
+            <input
+              type="number"
+              id="pengirim_coordinate_lng"
+              name="pengirim_coordinate_lng"
+              class="form-control"
+              step="any"
+              inputmode="decimal"
+              placeholder="106.816666"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SECTION 3 — Penerima
+           ==================================================================== -->
+      <section class="accordion-card" data-section="3">
+        <button type="button" class="accordion-header" aria-expanded="false">
+          <div class="section-title-wrap">
+            <span class="section-num">3</span>
+            <span class="section-title">Penerima</span>
+          </div>
+          <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="form-group">
+            <label class="form-label" for="penerima_nama">
+              <span>Nama Penerima</span>
+              <span class="schema-tag">penerima_nama</span>
+            </label>
+            <input type="text" id="penerima_nama" name="penerima_nama" class="form-control" placeholder="Nama lengkap penerima" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="penerima_telepon">
+              <span>Telepon Penerima</span>
+              <span class="schema-tag">penerima_telepon</span>
+            </label>
+            <input type="tel" id="penerima_telepon" name="penerima_telepon" class="form-control" placeholder="08xxxxxxxxxx" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="penerima_alamat">
+              <span>Alamat Penerima</span>
+              <span class="schema-tag">penerima_alamat</span>
+            </label>
+            <textarea id="penerima_alamat" name="penerima_alamat" class="form-control" placeholder="Alamat lengkap tujuan pengiriman"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="penerima_label">
+              <span>Label Penerima</span>
+              <span class="schema-tag">penerima_label</span>
+            </label>
+            <input type="text" id="penerima_label" name="penerima_label" class="form-control" placeholder="Contoh: Rumah / Kantor" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="penerima_gateway">
+              <span>Gateway Penerima</span>
+              <span class="schema-tag">penerima_gateway</span>
+            </label>
+            <input type="text" id="penerima_gateway" name="penerima_gateway" class="form-control" placeholder="Contoh: SRG / DPS / MDN" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="penerima_coordinate_lat">
+              <span>Latitude Penerima</span>
+              <span class="schema-tag">penerima_coordinate_lat</span>
+            </label>
+            <input
+              type="number"
+              id="penerima_coordinate_lat"
+              name="penerima_coordinate_lat"
+              class="form-control"
+              step="any"
+              inputmode="decimal"
+              placeholder="-7.005145"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="penerima_coordinate_lng">
+              <span>Longitude Penerima</span>
+              <span class="schema-tag">penerima_coordinate_lng</span>
+            </label>
+            <input
+              type="number"
+              id="penerima_coordinate_lng"
+              name="penerima_coordinate_lng"
+              class="form-control"
+              step="any"
+              inputmode="decimal"
+              placeholder="110.438125"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SECTION 4 — Status Pengiriman
+           ==================================================================== -->
+      <section class="accordion-card" data-section="4">
+        <button type="button" class="accordion-header" aria-expanded="false">
+          <div class="section-title-wrap">
+            <span class="section-num">4</span>
+            <span class="section-title">Status Pengiriman</span>
+          </div>
+          <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="form-group">
+            <label class="form-label" for="status_pengiriman">
+              <span>Status Pengiriman</span>
+              <span class="schema-tag">status_pengiriman</span>
+            </label>
+            <input
+              type="text"
+              id="status_pengiriman"
+              name="status_pengiriman"
+              class="form-control"
+              list="statusSuggestions"
+              placeholder="Contoh: Dalam Pengiriman / Terkirim"
+            />
+            <datalist id="statusSuggestions">
+              <option value="Manifes Dibuat"></option>
+              <option value="Paket Diproses"></option>
+              <option value="Dalam Pengiriman"></option>
+              <option value="Sedang Diantar Kurir"></option>
+              <option value="Terkirim"></option>
+              <option value="Tertunda / Kendala"></option>
+              <option value="Retur Pengirim"></option>
+            </datalist>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="status_percent">
+              <span>Persentase Status (0–100)</span>
+              <span class="schema-tag">status_percent</span>
+            </label>
+            <input
+              type="number"
+              id="status_percent"
+              name="status_percent"
+              class="form-control"
+              min="0"
+              max="100"
+              step="1"
+              inputmode="numeric"
+              placeholder="0"
+            />
+          </div>
+
+          <div class="toggle-list">
+            <label class="toggle-item" for="is_active">
+              <div class="toggle-info">
+                <span class="toggle-title">Status Aktif Resi</span>
+                <span class="toggle-desc">is_active (boolean)</span>
+              </div>
+              <span class="switch">
+                <input type="checkbox" id="is_active" name="is_active" checked />
+                <span class="slider"></span>
+              </span>
+            </label>
+
+            <label class="toggle-item" for="tagihan_is_active">
+              <div class="toggle-info">
+                <span class="toggle-title">Status Tagihan Aktif</span>
+                <span class="toggle-desc">tagihan_is_active (boolean)</span>
+              </div>
+              <span class="switch">
+                <input type="checkbox" id="tagihan_is_active" name="tagihan_is_active" />
+                <span class="slider"></span>
+              </span>
+            </label>
+
+            <label class="toggle-item" for="validasi_is_active">
+              <div class="toggle-info">
+                <span class="toggle-title">Status Validasi Aktif</span>
+                <span class="toggle-desc">validasi_is_active (boolean)</span>
+              </div>
+              <span class="switch">
+                <input type="checkbox" id="validasi_is_active" name="validasi_is_active" />
+                <span class="slider"></span>
+              </span>
+            </label>
+
+            <label class="toggle-item" for="refund_is_locked">
+              <div class="toggle-info">
+                <span class="toggle-title">Kunci Data Refund</span>
+                <span class="toggle-desc">refund_is_locked (mengunci edit Bagian 5)</span>
+              </div>
+              <span class="switch">
+                <input type="checkbox" id="refund_is_locked" name="refund_is_locked" />
+                <span class="slider"></span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SECTION 5 — Informasi Refund
+           ==================================================================== -->
+      <section class="accordion-card" data-section="5">
+        <button type="button" class="accordion-header" aria-expanded="false">
+          <div class="section-title-wrap">
+            <span class="section-num">5</span>
+            <span class="section-title">Informasi Refund</span>
+          </div>
+          <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="accordion-panel">
+          <div id="refundLockNotice" class="lock-notice">
+            Data refund sedang dikunci (<strong>refund_is_locked = true</strong>). Nonaktifkan kunci pada Bagian 4 untuk mengubah informasi refund.
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="refund_bank">
+              <span>Bank Refund</span>
+              <span class="schema-tag">refund_bank</span>
+            </label>
+            <input type="text" id="refund_bank" name="refund_bank" class="form-control refund-field" placeholder="Contoh: BCA / BRI / Mandiri / BNI" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="refund_account_holder">
+              <span>Nama Pemilik Rekening</span>
+              <span class="schema-tag">refund_account_holder</span>
+            </label>
+            <input type="text" id="refund_account_holder" name="refund_account_holder" class="form-control refund-field" placeholder="Nama sesuai buku tabungan" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="refund_account_number">
+              <span>Nomor Rekening Refund</span>
+              <span class="schema-tag">refund_account_number</span>
+            </label>
+            <input type="text" id="refund_account_number" name="refund_account_number" class="form-control refund-field" inputmode="numeric" placeholder="Nomor rekening tujuan" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="refund_amount">
+              <span>Nominal Refund (IDR)</span>
+              <span class="schema-tag">refund_amount</span>
+            </label>
+            <input
+              type="number"
+              id="refund_amount"
+              name="refund_amount"
+              class="form-control refund-field"
+              step="1"
+              min="0"
+              inputmode="numeric"
+              placeholder="0"
+            />
+            <div class="helper-row">
+              <span>Tampilan Rupiah:</span>
+              <span id="refund_amount_rp" class="rupiah-preview">Rp 0</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SECTION 6 — Riwayat Pengiriman (jet_travel_history)
+           ==================================================================== -->
+      <section class="accordion-card open" data-section="6">
+        <button type="button" class="accordion-header" aria-expanded="true">
+          <div class="section-title-wrap">
+            <span class="section-num">6</span>
+            <span class="section-title">Riwayat Pengiriman</span>
+          </div>
+          <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="accordion-panel">
+          <!-- Input / Edit Sub-Form for Travel History -->
+          <div class="history-form-box">
+            <div class="history-form-header">
+              <span id="historyFormModeTitle" class="history-form-title">Tambah Riwayat Perjalanan</span>
+            </div>
+
+            <input type="hidden" id="hist_edit_id" value="" />
+            <input type="hidden" id="hist_edit_local_idx" value="" />
+
+            <div class="form-group">
+              <label class="form-label" for="hist_title">
+                <span>Judul Riwayat <span class="req-mark">*</span></span>
+                <span class="schema-tag">title</span>
+              </label>
+              <input
+                type="text"
+                id="hist_title"
+                class="form-control"
+                placeholder="Contoh: Paket diproses"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="hist_desc">
+                <span>Deskripsi</span>
+                <span class="schema-tag">desc</span>
+              </label>
+              <textarea
+                id="hist_desc"
+                class="form-control"
+                placeholder="Contoh: Paket masuk pusat distribusi"
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="hist_time">
+                <span>Waktu Kejadian <span class="req-mark">*</span></span>
+                <span class="schema-tag">time</span>
+              </label>
+              <input type="datetime-local" id="hist_time" class="form-control" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="hist_location">
+                <span>Lokasi</span>
+                <span class="schema-tag">location</span>
+              </label>
+              <input
+                type="text"
+                id="hist_location"
+                class="form-control"
+                placeholder="Contoh: Semarang"
+              />
+            </div>
+
+            <div class="history-btn-row">
+              <button type="button" id="btnCancelHistoryEdit" class="btn-secondary" style="display: none;">
+                Batal
+              </button>
+              <button type="button" id="btnSaveHistory" class="btn-red-sm">
+                Simpan Riwayat
+              </button>
+            </div>
+            <div class="helper-row">
+              <span id="historyModeNote">
+                Pada Create Mode, riwayat akan otomatis disimpan setelah resi utama berhasil dibuat.
+              </span>
+            </div>
+          </div>
+
+          <!-- Saved Travel History Timeline List -->
+          <div class="history-list-header">
+            <span class="history-count">Daftar Riwayat (<span id="historyTotalCount">0</span>)</span>
+          </div>
+          <div id="historyTimelineList" class="history-timeline">
+            <div class="empty-history">Belum ada riwayat perjalanan untuk resi ini.</div>
+          </div>
+        </div>
+      </section>
+    </form>
+
+    <!-- STICKY BOTTOM SAVE BAR -->
+    <div class="bottom-bar">
+      <button type="button" id="btnSaveResi" class="btn-primary-save">
+        <span id="saveSpinner" class="spinner"></span>
+        <span id="saveButtonText">Simpan Data Resi</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 1: KONFIRMASI HAPUS RIWAYAT (PENGGANTI window.confirm)
+       ======================================================================== -->
+  <div id="confirmDeleteModal" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <h2 class="modal-title">Hapus Riwayat Pengiriman?</h2>
+      <div class="modal-body">
+        <p>Riwayat perjalanan berikut akan dihapus secara permanen dari database:</p>
+        <p><strong id="deleteTargetSummary">-</strong></p>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="btnCancelDelete" class="btn-xs">Batal</button>
+        <button type="button" id="btnConfirmDelete" class="btn-xs danger">Ya, Hapus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 2: KONFIGURASI SUPABASE EDGE FUNCTION
+       ======================================================================== -->
+  <div id="configModal" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <h2 class="modal-title">Konfigurasi Koneksi Supabase</h2>
+      <div class="modal-body">
+        <p>Gunakan Supabase Project URL dan <strong>anon / publishable key</strong> (jangan gunakan <code>service_role</code> key).</p>
+        <div class="form-group">
+          <label class="form-label" for="cfgSupabaseUrl">Supabase Project URL</label>
+          <input type="url" id="cfgSupabaseUrl" class="form-control" placeholder="https://jezjupxysmctthvkrnpx.supabase.co" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="cfgAnonKey">Supabase Anon / Publishable Key</label>
+          <input type="text" id="cfgAnonKey" class="form-control" placeholder="eyJhbGciOi..." />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="cfgBearerToken">Authorization Bearer JWT (Opsional, default ke Anon Key)</label>
+          <input type="text" id="cfgBearerToken" class="form-control" placeholder="Kosongkan untuk memakai Anon Key" />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="btnCloseConfig" class="btn-xs">Tutup</button>
+        <button type="button" id="btnSaveConfig" class="btn-red-sm" style="flex:0 0 auto; padding: 0 16px; min-height: 36px;">Simpan Konfigurasi</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /* ======================================================================
+         1. KONFIGURASI SUPABASE EDGE FUNCTION (PLACEHOLDER YANG MUDAH DIGANTI)
+         ====================================================================== */
+      const DEFAULT_CONFIG = {
+        SUPABASE_URL: "https://jezjupxysmctthvkrnpx.supabase.co",
+        SUPABASE_ANON_KEY: "REPLACE_WITH_YOUR_SUPABASE_ANON_OR_PUBLISHABLE_KEY",
+        EDGE_FUNCTION_PATH: "/functions/v1/crud-jet"
+      };
+
+      const STORAGE_KEYS = {
+        URL: "jt_crud_supabase_url",
+        ANON: "jt_crud_supabase_anon_key",
+        JWT: "jt_crud_bearer_jwt"
+      };
+
+      function getRuntimeConfig() {
+        const storedUrl = localStorage.getItem(STORAGE_KEYS.URL);
+        const storedAnon = localStorage.getItem(STORAGE_KEYS.ANON);
+        const storedJwt = localStorage.getItem(STORAGE_KEYS.JWT);
+
+        const url = (storedUrl && storedUrl.trim()) || DEFAULT_CONFIG.SUPABASE_URL;
+        const anonKey = (storedAnon && storedAnon.trim()) || DEFAULT_CONFIG.SUPABASE_ANON_KEY;
+        const bearerJwt = (storedJwt && storedJwt.trim()) || anonKey;
+
+        return {
+          endpoint: `${url.replace(/\/+$/, "")}${DEFAULT_CONFIG.EDGE_FUNCTION_PATH}`,
+          supabaseUrl: url,
+          anonKey: anonKey,
+          bearerJwt: bearerJwt
+        };
+      }
+
+      /* ======================================================================
+         2. SCHEMA ALLOWLISTS (STRICT SOURCE OF TRUTH)
+         ====================================================================== */
+      const JET_RESI_EDITABLE_FIELDS = [
+        "nomor_resi",
+        "date",
+        "estimasi_tiba",
+        "paket",
+        "weight",
+        "biaya_kirim",
+        "status_pengiriman",
+        "status_percent",
+        "pengirim_nama",
+        "pengirim_alamat",
+        "pengirim_telepon",
+        "penerima_nama",
+        "penerima_alamat",
+        "penerima_telepon",
+        "pengirim_label",
+        "pengirim_gateway",
+        "pengirim_coordinate_lat",
+        "pengirim_coordinate_lng",
+        "penerima_label",
+        "penerima_gateway",
+        "penerima_coordinate_lat",
+        "penerima_coordinate_lng",
+        "tagihan_is_active",
+        "refund_is_locked",
+        "is_active",
+        "validasi_is_active",
+        "refund_bank",
+        "refund_amount",
+        "refund_account_holder",
+        "refund_account_number"
+      ];
+
+      const JET_TRAVEL_HISTORY_EDITABLE_FIELDS = [
+        "nomor_resi",
+        "title",
+        "desc",
+        "time",
+        "location"
+      ];
+
+      /* ======================================================================
+         3. APPLICATION STATE
+         ====================================================================== */
+      const state = {
+        mode: "create", // "create" | "edit"
+        currentResi: "",
+        isSavingResi: false,
+        isSavingHistory: false,
+        isLoadingResi: false,
+        savedHistory: [],    // Records from DB with UUID `id`
+        pendingHistory: [],  // Staged records in CREATE MODE before resi exists
+        deleteTargetId: null
+      };
+
+      /* ======================================================================
+         4. DOM REFERENCES
+         ====================================================================== */
+      const dom = {
+        modeBadge: document.getElementById("modeBadge"),
+        activeResiSubtitle: document.getElementById("activeResiSubtitle"),
+        btnNewMode: document.getElementById("btnNewMode"),
+        btnOpenConfig: document.getElementById("btnOpenConfig"),
+        searchResiInput: document.getElementById("searchResiInput"),
+        btnLoadResi: document.getElementById("btnLoadResi"),
+        bannerArea: document.getElementById("bannerArea"),
+        alertBox: document.getElementById("alertBox"),
+        alertTitle: document.getElementById("alertTitle"),
+        alertMessage: document.getElementById("alertMessage"),
+        btnCloseAlert: document.getElementById("btnCloseAlert"),
+        resiForm: document.getElementById("resiForm"),
+        btnSaveResi: document.getElementById("btnSaveResi"),
+        saveSpinner: document.getElementById("saveSpinner"),
+        saveButtonText: document.getElementById("saveButtonText"),
+        // Resi fields
+        nomor_resi: document.getElementById("nomor_resi"),
+        resiLockHint: document.getElementById("resiLockHint"),
+        date: document.getElementById("date"),
+        estimasi_tiba: document.getElementById("estimasi_tiba"),
+        paket: document.getElementById("paket"),
+        weight: document.getElementById("weight"),
+        biaya_kirim: document.getElementById("biaya_kirim"),
+        biaya_kirim_rp: document.getElementById("biaya_kirim_rp"),
+        timestampMetaBox: document.getElementById("timestampMetaBox"),
+        metaCreatedAt: document.getElementById("metaCreatedAt"),
+        metaUpdatedAt: document.getElementById("metaUpdatedAt"),
+        pengirim_nama: document.getElementById("pengirim_nama"),
+        pengirim_telepon: document.getElementById("pengirim_telepon"),
+        pengirim_alamat: document.getElementById("pengirim_alamat"),
+        pengirim_label: document.getElementById("pengirim_label"),
+        pengirim_gateway: document.getElementById("pengirim_gateway"),
+        pengirim_coordinate_lat: document.getElementById("pengirim_coordinate_lat"),
+        pengirim_coordinate_lng: document.getElementById("pengirim_coordinate_lng"),
+        penerima_nama: document.getElementById("penerima_nama"),
+        penerima_telepon: document.getElementById("penerima_telepon"),
+        penerima_alamat: document.getElementById("penerima_alamat"),
+        penerima_label: document.getElementById("penerima_label"),
+        penerima_gateway: document.getElementById("penerima_gateway"),
+        penerima_coordinate_lat: document.getElementById("penerima_coordinate_lat"),
+        penerima_coordinate_lng: document.getElementById("penerima_coordinate_lng"),
+        status_pengiriman: document.getElementById("status_pengiriman"),
+        status_percent: document.getElementById("status_percent"),
+        is_active: document.getElementById("is_active"),
+        tagihan_is_active: document.getElementById("tagihan_is_active"),
+        validasi_is_active: document.getElementById("validasi_is_active"),
+        refund_is_locked: document.getElementById("refund_is_locked"),
+        refundLockNotice: document.getElementById("refundLockNotice"),
+        refund_bank: document.getElementById("refund_bank"),
+        refund_account_holder: document.getElementById("refund_account_holder"),
+        refund_account_number: document.getElementById("refund_account_number"),
+        refund_amount: document.getElementById("refund_amount"),
+        refund_amount_rp: document.getElementById("refund_amount_rp"),
+        // Travel history
+        historyFormModeTitle: document.getElementById("historyFormModeTitle"),
+        hist_edit_id: document.getElementById("hist_edit_id"),
+        hist_edit_local_idx: document.getElementById("hist_edit_local_idx"),
+        hist_title: document.getElementById("hist_title"),
+        hist_desc: document.getElementById("hist_desc"),
+        hist_time: document.getElementById("hist_time"),
+        hist_location: document.getElementById("hist_location"),
+        btnCancelHistoryEdit: document.getElementById("btnCancelHistoryEdit"),
+        btnSaveHistory: document.getElementById("btnSaveHistory"),
+        historyModeNote: document.getElementById("historyModeNote"),
+        historyTotalCount: document.getElementById("historyTotalCount"),
+        historyTimelineList: document.getElementById("historyTimelineList"),
+        // Modals
+        confirmDeleteModal: document.getElementById("confirmDeleteModal"),
+        deleteTargetSummary: document.getElementById("deleteTargetSummary"),
+        btnCancelDelete: document.getElementById("btnCancelDelete"),
+        btnConfirmDelete: document.getElementById("btnConfirmDelete"),
+        configModal: document.getElementById("configModal"),
+        cfgSupabaseUrl: document.getElementById("cfgSupabaseUrl"),
+        cfgAnonKey: document.getElementById("cfgAnonKey"),
+        cfgBearerToken: document.getElementById("cfgBearerToken"),
+        btnCloseConfig: document.getElementById("btnCloseConfig"),
+        btnSaveConfig: document.getElementById("btnSaveConfig")
+      };
+
+      /* ======================================================================
+         5. HELPER & FORMATTING UTILITIES
+         ====================================================================== */
+      function formatRupiah(value) {
+        if (value === null || value === undefined || value === "") return "Rp 0";
+        const num = Number(value);
+        if (!Number.isFinite(num)) return "Rp 0";
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        }).format(num);
+      }
+
+      function toDatetimeLocalValue(isoString) {
+        if (!isoString) return "";
+        const d = new Date(isoString);
+        if (Number.isNaN(d.getTime())) return "";
+        const pad = (n) => String(n).padStart(2, "0");
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      }
+
+      function fromDatetimeLocalToISO(localVal) {
+        if (!localVal || !localVal.trim()) return null;
+        const d = new Date(localVal);
+        if (Number.isNaN(d.getTime())) return null;
+        return d.toISOString();
+      }
+
+      function formatDisplayDateTime(isoString) {
+        if (!isoString) return "-";
+        const d = new Date(isoString);
+        if (Number.isNaN(d.getTime())) return isoString;
+        return new Intl.DateTimeFormat("id-ID", {
+          dateStyle: "medium",
+          timeStyle: "short"
+        }).format(d);
+      }
+
+      function escapeHtml(str) {
+        if (str === null || str === undefined) return "";
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      /* ======================================================================
+         6. FEEDBACK BANNER & SAFE ERROR TRANSLATOR (NO SECRET LEAKS)
+         ====================================================================== */
+      function showBanner(type, title, message) {
+        dom.alertBox.className = `alert-box ${type}`;
+        dom.alertTitle.textContent = title;
+        dom.alertMessage.textContent = message;
+        dom.bannerArea.classList.add("visible");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function hideBanner() {
+        dom.bannerArea.classList.remove("visible");
+      }
+
+      function mapHttpErrorMessage(status, serverMessage) {
+        const cleanServerMsg = typeof serverMessage === "string" && serverMessage.length < 180
+          ? serverMessage.replace(/eyJ[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+/g, "[TOKEN_HIDDEN]")
+          : "";
+
+        switch (status) {
+          case 400:
+            return `Permintaan tidak valid (400). Periksa kembali format data yang dimasukkan.${cleanServerMsg ? " Detail: " + cleanServerMsg : ""}`;
+          case 401:
+            return "Akses ditolak (401). Kunci autentikasi Supabase tidak valid atau sesi kedaluwarsa.";
+          case 403:
+            return "Izin ditolak (403). Anda tidak memiliki hak akses untuk operasi ini.";
+          case 404:
+            return "Data atau endpoint tidak ditemukan (404). Pastikan nomor resi terdaftar dan Edge Function aktif.";
+          case 409:
+            return "Konflik data (409). Nomor resi sudah terdaftar di database.";
+          case 422:
+            return `Validasi server gagal (422). Pastikan seluruh kolom sesuai aturan schema.${cleanServerMsg ? " Detail: " + cleanServerMsg : ""}`;
+          case 500:
+          case 502:
+          case 503:
+            return `Terjadi kesalahan pada server (${status}). Silakan coba beberapa saat lagi.`;
+          default:
+            return `Gagal memproses permintaan (HTTP ${status}).${cleanServerMsg ? " " + cleanServerMsg : ""}`;
+        }
+      }
+
+      /* ======================================================================
+         7. SUPABASE EDGE FUNCTION CLIENT (crud-jet ONLY)
+         ====================================================================== */
+      async function callCrudJet(payload) {
+        const cfg = getRuntimeConfig();
+
+        if (!cfg.anonKey || cfg.anonKey.includes("REPLACE_WITH_YOUR")) {
+          throw new Error("Konfigurasi Supabase Anon Key belum diisi. Klik tombol 'Koneksi' di kanan atas untuk memasukkan key publik.");
+        }
+
+        let response;
+        try {
+          response = await fetch(cfg.endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${cfg.bearerJwt}`,
+              "apikey": cfg.anonKey
+            },
+            body: JSON.stringify(payload)
+          });
+        } catch (networkErr) {
+          throw new Error("Gagal terhubung ke jaringan atau server Supabase. Periksa koneksi internet Anda.");
+        }
+
+        let rawText = "";
+        try {
+          rawText = await response.text();
+        } catch (readErr) {
+          throw new Error("Gagal membaca respons dari server.");
+        }
+
+        if (!rawText || !rawText.trim()) {
+          if (!response.ok) {
+            throw new Error(mapHttpErrorMessage(response.status, ""));
+          }
+          throw new Error("Server mengembalikan respons kosong (Empty response).");
+        }
+
+        let json;
+        try {
+          json = JSON.parse(rawText);
+        } catch (parseErr) {
+          throw new Error("Format respons server tidak valid (Invalid JSON response).");
+        }
+
+        if (!response.ok) {
+          const errDetail = json?.error?.message || json?.message || json?.error || "";
+          throw new Error(mapHttpErrorMessage(response.status, errDetail));
+        }
+
+        if (json && json.error) {
+          const errDetail = typeof json.error === "string" ? json.error : (json.error.message || "Operasi ditolak server.");
+          throw new Error(errDetail);
+        }
+
+        return json;
+      }
+
+      /* ======================================================================
+         8. STRICT SCHEMA PAYLOAD BUILDERS & VALIDATION
+         ====================================================================== */
+      function sanitizeStrictObject(obj, allowedFields) {
+        const clean = {};
+        const keys = Object.keys(obj);
+        for (const key of keys) {
+          if (!allowedFields.includes(key)) {
+            throw new Error(`Field tidak dikenal ditolak oleh validasi schema: ${key}`);
+          }
+          clean[key] = obj[key];
+        }
+        return clean;
+      }
+
+      function parseNullableText(el) {
+        const v = el.value.trim();
+        return v === "" ? null : v;
+      }
+
+      function parseNullableNumber(el, fieldLabel, opts = {}) {
+        const raw = el.value.trim();
+        if (raw === "") return null;
+        const num = Number(raw);
+        if (!Number.isFinite(num)) {
+          throw new Error(`${fieldLabel} harus berupa angka yang valid.`);
+        }
+        if (opts.nonNegative && num < 0) {
+          throw new Error(`${fieldLabel} tidak boleh bernilai negatif.`);
+        }
+        if (opts.integer && !Number.isInteger(num)) {
+          throw new Error(`${fieldLabel} harus berupa bilangan bulat.`);
+        }
+        if (typeof opts.min === "number" && num < opts.min) {
+          throw new Error(`${fieldLabel} minimal ${opts.min}.`);
+        }
+        if (typeof opts.max === "number" && num > opts.max) {
+          throw new Error(`${fieldLabel} maksimal ${opts.max}.`);
+        }
+        if (typeof opts.decimals === "number") {
+          return Number(num.toFixed(opts.decimals));
+        }
+        return num;
+      }
+
+      function collectAndValidateResiData(isCreate) {
+        const nomorResi = dom.nomor_resi.value.trim();
+        if (!nomorResi) {
+          throw new Error("Nomor Resi wajib diisi.");
+        }
+
+        const weightVal = parseNullableNumber(dom.weight, "Berat", { nonNegative: true, decimals: 3 });
+        const biayaKirimVal = parseNullableNumber(dom.biaya_kirim, "Biaya Kirim", { nonNegative: true, integer: true });
+        const statusPercentVal = parseNullableNumber(dom.status_percent, "Persentase Status", {
+          integer: true,
+          min: 0,
+          max: 100
+        });
+        const refundAmountVal = parseNullableNumber(dom.refund_amount, "Nominal Refund", {
+          nonNegative: true,
+          integer: true
+        });
+
+        const pengirimLat = parseNullableNumber(dom.pengirim_coordinate_lat, "Latitude Pengirim");
+        const pengirimLng = parseNullableNumber(dom.pengirim_coordinate_lng, "Longitude Pengirim");
+        const penerimaLat = parseNullableNumber(dom.penerima_coordinate_lat, "Latitude Penerima");
+        const penerimaLng = parseNullableNumber(dom.penerima_coordinate_lng, "Longitude Penerima");
+
+        if (pengirimLat !== null && (pengirimLat < -90 || pengirimLat > 90)) {
+          throw new Error("Latitude Pengirim harus berada di antara -90 hingga 90.");
+        }
+        if (pengirimLng !== null && (pengirimLng < -180 || pengirimLng > 180)) {
+          throw new Error("Longitude Pengirim harus berada di antara -180 hingga 180.");
+        }
+        if (penerimaLat !== null && (penerimaLat < -90 || penerimaLat > 90)) {
+          throw new Error("Latitude Penerima harus berada di antara -90 hingga 90.");
+        }
+        if (penerimaLng !== null && (penerimaLng < -180 || penerimaLng > 180)) {
+          throw new Error("Longitude Penerima harus berada di antara -180 hingga 180.");
+        }
+
+        const rawPayload = {
+          date: fromDatetimeLocalToISO(dom.date.value),
+          estimasi_tiba: fromDatetimeLocalToISO(dom.estimasi_tiba.value),
+          paket: parseNullableText(dom.paket),
+          weight: weightVal,
+          biaya_kirim: biayaKirimVal,
+          status_pengiriman: parseNullableText(dom.status_pengiriman),
+          status_percent: statusPercentVal,
+          pengirim_nama: parseNullableText(dom.pengirim_nama),
+          pengirim_alamat: parseNullableText(dom.pengirim_alamat),
+          pengirim_telepon: parseNullableText(dom.pengirim_telepon),
+          penerima_nama: parseNullableText(dom.penerima_nama),
+          penerima_alamat: parseNullableText(dom.penerima_alamat),
+          penerima_telepon: parseNullableText(dom.penerima_telepon),
+          pengirim_label: parseNullableText(dom.pengirim_label),
+          pengirim_gateway: parseNullableText(dom.pengirim_gateway),
+          pengirim_coordinate_lat: pengirimLat,
+          pengirim_coordinate_lng: pengirimLng,
+          penerima_label: parseNullableText(dom.penerima_label),
+          penerima_gateway: parseNullableText(dom.penerima_gateway),
+          penerima_coordinate_lat: penerimaLat,
+          penerima_coordinate_lng: penerimaLng,
+          tagihan_is_active: Boolean(dom.tagihan_is_active.checked),
+          refund_is_locked: Boolean(dom.refund_is_locked.checked),
+          is_active: Boolean(dom.is_active.checked),
+          validasi_is_active: Boolean(dom.validasi_is_active.checked),
+          refund_bank: parseNullableText(dom.refund_bank),
+          refund_amount: refundAmountVal,
+          refund_account_holder: parseNullableText(dom.refund_account_holder),
+          refund_account_number: parseNullableText(dom.refund_account_number)
+        };
+
+        if (isCreate) {
+          rawPayload.nomor_resi = nomorResi;
+        }
+
+        return sanitizeStrictObject(rawPayload, JET_RESI_EDITABLE_FIELDS);
+      }
+
+      function validateHistoryInput(nomorResi) {
+        const title = dom.hist_title.value.trim();
+        const desc = parseNullableText(dom.hist_desc);
+        const timeIso = fromDatetimeLocalToISO(dom.hist_time.value);
+        const location = parseNullableText(dom.hist_location);
+
+        if (!title) {
+          throw new Error("Judul riwayat wajib diisi.");
+        }
+        if (!timeIso) {
+          throw new Error("Waktu kejadian riwayat wajib diisi.");
+        }
+        if (!nomorResi) {
+          throw new Error("Nomor resi harus valid sebelum menyimpan riwayat.");
+        }
+
+        return sanitizeStrictObject(
+          {
+            nomor_resi: nomorResi,
+            title: title,
+            desc: desc,
+            time: timeIso,
+            location: location
+          },
+          JET_TRAVEL_HISTORY_EDITABLE_FIELDS
+        );
+      }
+
+      /* ======================================================================
+         9. UI STATE SYNCHRONIZATION (CREATE VS EDIT MODE & REFUND LOCK)
+         ====================================================================== */
+      function applyRefundLockState() {
+        const locked = Boolean(dom.refund_is_locked.checked);
+        const refundFields = document.querySelectorAll(".refund-field");
+        refundFields.forEach((field) => {
+          field.disabled = locked;
+        });
+        if (locked) {
+          dom.refundLockNotice.classList.add("visible");
+        } else {
+          dom.refundLockNotice.classList.remove("visible");
+        }
+      }
+
+      function updateRupiahIndicators() {
+        dom.biaya_kirim_rp.textContent = formatRupiah(dom.biaya_kirim.value);
+        dom.refund_amount_rp.textContent = formatRupiah(dom.refund_amount.value);
+      }
+
+      function setMode(mode, resiNumber = "") {
+        state.mode = mode;
+        state.currentResi = resiNumber;
+
+        if (mode === "edit") {
+          dom.modeBadge.textContent = "EDIT MODE";
+          dom.activeResiSubtitle.textContent = `Resi: ${resiNumber}`;
+          dom.nomor_resi.value = resiNumber;
+          dom.nomor_resi.readOnly = true;
+          dom.resiLockHint.textContent = "Terkunci pada Edit Mode (primary key tidak dapat diubah).";
+          dom.saveButtonText.textContent = "Perbarui Data Resi";
+          dom.historyModeNote.textContent = "Perubahan riwayat langsung tersimpan ke database untuk resi ini.";
+          dom.timestampMetaBox.style.display = "flex";
+        } else {
+          dom.modeBadge.textContent = "CREATE MODE";
+          dom.activeResiSubtitle.textContent = "Resi Baru (Belum Tersimpan)";
+          dom.nomor_resi.readOnly = false;
+          dom.resiLockHint.textContent = "Primary key resi (tidak dapat diubah setelah dibuat).";
+          dom.saveButtonText.textContent = "Simpan Data Resi";
+          dom.historyModeNote.textContent = "Pada Create Mode, riwayat akan disimpan setelah resi utama berhasil dibuat.";
+          dom.timestampMetaBox.style.display = "none";
+        }
+        renderHistoryList();
+      }
+
+      function resetToCreateMode() {
+        hideBanner();
+        dom.resiForm.reset();
+        dom.is_active.checked = true;
+        dom.tagihan_is_active.checked = false;
+        dom.validasi_is_active.checked = false;
+        dom.refund_is_locked.checked = false;
+        state.savedHistory = [];
+        state.pendingHistory = [];
+        resetHistorySubForm();
+        applyRefundLockState();
+        updateRupiahIndicators();
+        setMode("create", "");
+
+        // Update URL query without reloading
+        const url = new URL(window.location.href);
+        url.searchParams.delete("nomor_resi");
+        window.history.replaceState({}, "", url.toString());
+      }
+
+      function populateResiForm(record) {
+        dom.nomor_resi.value = record.nomor_resi ?? "";
+        dom.date.value = toDatetimeLocalValue(record.date);
+        dom.estimasi_tiba.value = toDatetimeLocalValue(record.estimasi_tiba);
+        dom.paket.value = record.paket ?? "";
+        dom.weight.value = record.weight ?? "";
+        dom.biaya_kirim.value = record.biaya_kirim ?? "";
+
+        dom.pengirim_nama.value = record.pengirim_nama ?? "";
+        dom.pengirim_telepon.value = record.pengirim_telepon ?? "";
+        dom.pengirim_alamat.value = record.pengirim_alamat ?? "";
+        dom.pengirim_label.value = record.pengirim_label ?? "";
+        dom.pengirim_gateway.value = record.pengirim_gateway ?? "";
+        dom.pengirim_coordinate_lat.value = record.pengirim_coordinate_lat ?? "";
+        dom.pengirim_coordinate_lng.value = record.pengirim_coordinate_lng ?? "";
+
+        dom.penerima_nama.value = record.penerima_nama ?? "";
+        dom.penerima_telepon.value = record.penerima_telepon ?? "";
+        dom.penerima_alamat.value = record.penerima_alamat ?? "";
+        dom.penerima_label.value = record.penerima_label ?? "";
+        dom.penerima_gateway.value = record.penerima_gateway ?? "";
+        dom.penerima_coordinate_lat.value = record.penerima_coordinate_lat ?? "";
+        dom.penerima_coordinate_lng.value = record.penerima_coordinate_lng ?? "";
+
+        dom.status_pengiriman.value = record.status_pengiriman ?? "";
+        dom.status_percent.value = record.status_percent ?? "";
+        dom.is_active.checked = Boolean(record.is_active);
+        dom.tagihan_is_active.checked = Boolean(record.tagihan_is_active);
+        dom.validasi_is_active.checked = Boolean(record.validasi_is_active);
+        dom.refund_is_locked.checked = Boolean(record.refund_is_locked);
+
+        dom.refund_bank.value = record.refund_bank ?? "";
+        dom.refund_account_holder.value = record.refund_account_holder ?? "";
+        dom.refund_account_number.value = record.refund_account_number ?? "";
+        dom.refund_amount.value = record.refund_amount ?? "";
+
+        dom.metaCreatedAt.textContent = formatDisplayDateTime(record.created_at);
+        dom.metaUpdatedAt.textContent = formatDisplayDateTime(record.updated_at);
+
+        applyRefundLockState();
+        updateRupiahIndicators();
+      }
+
+      /* ======================================================================
+         10. TRAVEL HISTORY RENDERING & SUB-FORM OPERATIONS
+         ====================================================================== */
+      function resetHistorySubForm() {
+        dom.hist_edit_id.value = "";
+        dom.hist_edit_local_idx.value = "";
+        dom.hist_title.value = "";
+        dom.hist_desc.value = "";
+        dom.hist_time.value = "";
+        dom.hist_location.value = "";
+        dom.historyFormModeTitle.textContent = "Tambah Riwayat Perjalanan";
+        dom.btnSaveHistory.textContent = "Simpan Riwayat";
+        dom.btnCancelHistoryEdit.style.display = "none";
+      }
+
+      function renderHistoryList() {
+        const combined = [
+          ...state.savedHistory.map((item) => ({ ...item, _source: "db" })),
+          ...state.pendingHistory.map((item, idx) => ({ ...item, _source: "local", _localIdx: idx }))
+        ];
+
+        // Sort descending by time
+        combined.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+
+        dom.historyTotalCount.textContent = String(combined.length);
+
+        if (combined.length === 0) {
+          dom.historyTimelineList.innerHTML = `<div class="empty-history">Belum ada riwayat perjalanan untuk resi ini.</div>`;
+          return;
+        }
+
+        dom.historyTimelineList.innerHTML = combined
+          .map((item) => {
+            const isLocal = item._source === "local";
+            const badgeHtml = isLocal
+              ? `<span class="history-badge">Menunggu Resi Disimpan</span>`
+              : "";
+            const actionAttrs = isLocal
+              ? `data-source="local" data-idx="${item._localIdx}"`
+              : `data-source="db" data-id="${escapeHtml(item.id)}"`;
+
+            return `
+              <article class="history-card ${isLocal ? "pending-local" : ""}">
+                <div class="history-card-top">
+                  <span class="history-title">${escapeHtml(item.title)}</span>
+                  ${badgeHtml}
+                </div>
+                ${item.desc ? `<p class="history-desc">${escapeHtml(item.desc)}</p>` : ""}
+                <div class="history-meta">
+                  <span>Waktu: <strong>${escapeHtml(formatDisplayDateTime(item.time))}</strong></span>
+                  <span>Lokasi: <strong>${escapeHtml(item.location || "-")}</strong></span>
+                </div>
+                <div class="history-actions">
+                  <button type="button" class="btn-xs btn-edit-history" ${actionAttrs}>Edit</button>
+                  <button type="button" class="btn-xs danger btn-delete-history" ${actionAttrs}>Hapus</button>
+                </div>
+              </article>
+            `;
+          })
+          .join("");
+      }
+
+      async function handleSaveHistoryClick() {
+        if (state.isSavingHistory) return;
+        hideBanner();
+
+        const currentResiVal = dom.nomor_resi.value.trim();
+
+        try {
+          const histPayload = validateHistoryInput(currentResiVal);
+          const editUuid = dom.hist_edit_id.value.trim();
+          const editLocalIdx = dom.hist_edit_local_idx.value.trim();
+
+          // CASE A: CREATE MODE (Stage locally until primary resi is created)
+          if (state.mode === "create") {
+            if (editLocalIdx !== "") {
+              const idx = Number(editLocalIdx);
+              state.pendingHistory[idx] = histPayload;
+              showBanner("success", "Riwayat Diperbarui", "Draft riwayat perjalanan diperbarui dan akan disimpan bersama resi.");
+            } else {
+              state.pendingHistory.push(histPayload);
+              showBanner("success", "Riwayat Ditambahkan", "Riwayat ditambahkan ke antrean dan akan disimpan setelah resi dibuat.");
+            }
+            resetHistorySubForm();
+            renderHistoryList();
+            return;
+          }
+
+          // CASE B: EDIT MODE (Direct API call to crud-jet)
+          state.isSavingHistory = true;
+          dom.btnSaveHistory.disabled = true;
+          dom.btnSaveHistory.textContent = "Menyimpan...";
+
+          if (editUuid) {
+            // UPDATE TRAVEL HISTORY
+            const updateData = {
+              nomor_resi: state.currentResi,
+              title: histPayload.title,
+              desc: histPayload.desc,
+              time: histPayload.time,
+              location: histPayload.location
+            };
+            await callCrudJet({
+              action: "update",
+              table: "jet_travel_history",
+              filters: [
+                {
+                  column: "id",
+                  operator: "eq",
+                  value: editUuid
+                }
+              ],
+              data: updateData
+            });
+            showBanner("success", "Riwayat Diperbarui", "Perubahan riwayat perjalanan berhasil disimpan ke database.");
+          } else {
+            // CREATE TRAVEL HISTORY
+            await callCrudJet({
+              action: "create",
+              table: "jet_travel_history",
+              data: {
+                nomor_resi: state.currentResi,
+                title: histPayload.title,
+                desc: histPayload.desc,
+                time: histPayload.time,
+                location: histPayload.location
+              }
+            });
+            showBanner("success", "Riwayat Tersimpan", "Riwayat perjalanan baru berhasil ditambahkan.");
+          }
+
+          resetHistorySubForm();
+          await loadResiFromServer(state.currentResi, true);
+        } catch (err) {
+          showBanner("error", "Gagal Menyimpan Riwayat", err.message || "Terjadi kesalahan saat menyimpan riwayat.");
+        } finally {
+          state.isSavingHistory = false;
+          dom.btnSaveHistory.disabled = false;
+          dom.btnSaveHistory.textContent = dom.hist_edit_id.value ? "Perbarui Riwayat" : "Simpan Riwayat";
+        }
+      }
+
+      function startEditHistory(source, identifier) {
+        hideBanner();
+        if (source === "local") {
+          const idx = Number(identifier);
+          const item = state.pendingHistory[idx];
+          if (!item) return;
+          dom.hist_edit_id.value = "";
+          dom.hist_edit_local_idx.value = String(idx);
+          dom.hist_title.value = item.title || "";
+          dom.hist_desc.value = item.desc || "";
+          dom.hist_time.value = toDatetimeLocalValue(item.time);
+          dom.hist_location.value = item.location || "";
+        } else {
+          const item = state.savedHistory.find((h) => h.id === identifier);
+          if (!item) return;
+          dom.hist_edit_local_idx.value = "";
+          dom.hist_edit_id.value = item.id;
+          dom.hist_title.value = item.title || "";
+          dom.hist_desc.value = item.desc || "";
+          dom.hist_time.value = toDatetimeLocalValue(item.time);
+          dom.hist_location.value = item.location || "";
+        }
+
+        dom.historyFormModeTitle.textContent = "Edit Riwayat Perjalanan";
+        dom.btnSaveHistory.textContent = "Perbarui Riwayat";
+        dom.btnCancelHistoryEdit.style.display = "inline-block";
+        dom.hist_title.focus();
+      }
+
+      function requestDeleteHistory(source, identifier) {
+        hideBanner();
+        if (source === "local") {
+          const idx = Number(identifier);
+          state.pendingHistory.splice(idx, 1);
+          if (dom.hist_edit_local_idx.value === String(idx)) {
+            resetHistorySubForm();
+          }
+          renderHistoryList();
+          showBanner("success", "Draft Dihapus", "Draft riwayat perjalanan telah dihapus.");
+          return;
+        }
+
+        const item = state.savedHistory.find((h) => h.id === identifier);
+        if (!item) return;
+
+        state.deleteTargetId = item.id;
+        dom.deleteTargetSummary.textContent = `${item.title} (${formatDisplayDateTime(item.time)})`;
+        dom.confirmDeleteModal.classList.add("open");
+      }
+
+      async function confirmDeleteHistoryFromDb() {
+        const targetId = state.deleteTargetId;
+        if (!targetId) return;
+
+        dom.btnConfirmDelete.disabled = true;
+        dom.btnConfirmDelete.textContent = "Menghapus...";
+
+        try {
+          await callCrudJet({
+            action: "delete",
+            table: "jet_travel_history",
+            filters: [
+              {
+                column: "id",
+                operator: "eq",
+                value: targetId
+              }
+            ]
+          });
+
+          dom.confirmDeleteModal.classList.remove("open");
+          state.deleteTargetId = null;
+          if (dom.hist_edit_id.value === targetId) {
+            resetHistorySubForm();
+          }
+
+          await loadResiFromServer(state.currentResi, true);
+          showBanner("success", "Riwayat Dihapus", "Riwayat perjalanan berhasil dihapus dari database.");
+        } catch (err) {
+          dom.confirmDeleteModal.classList.remove("open");
+          showBanner("error", "Gagal Menghapus Riwayat", err.message || "Gagal menghapus data riwayat.");
+        } finally {
+          dom.btnConfirmDelete.disabled = false;
+          dom.btnConfirmDelete.textContent = "Ya, Hapus";
+        }
+      }
+
+      /* ======================================================================
+         11. LOAD & SAVE RESI OPERATIONS (READ, CREATE, UPDATE)
+         ====================================================================== */
+      function extractResiAndHistoryFromResponse(apiResponse) {
+        // Handle flexible envelope structures from crud-jet while strictly mapping schema
+        const root = apiResponse?.data !== undefined ? apiResponse.data : apiResponse;
+        const record = Array.isArray(root) ? root[0] : root;
+
+        if (!record || typeof record !== "object" || !record.nomor_resi) {
+          return null;
+        }
+
+        const historyArray =
+          record.travel_history ||
+          record.jet_travel_history ||
+          apiResponse?.travel_history ||
+          apiResponse?.jet_travel_history ||
+          [];
+
+        return {
+          resi: record,
+          history: Array.isArray(historyArray) ? historyArray : []
+        };
+      }
+
+      async function loadResiFromServer(nomorResi, silentSuccess = false) {
+        const cleanResi = (nomorResi || "").trim();
+        if (!cleanResi) {
+          showBanner("error", "Nomor Resi Kosong", "Masukkan nomor resi yang ingin dimuat.");
+          return;
+        }
+
+        if (state.isLoadingResi) return;
+        state.isLoadingResi = true;
+        dom.btnLoadResi.disabled = true;
+        dom.btnLoadResi.textContent = "Memuat...";
+
+        try {
+          const result = await callCrudJet({
+            action: "read",
+            table: "jet_resi",
+            filters: [
+              {
+                column: "nomor_resi",
+                operator: "eq",
+                value: cleanResi
+              }
+            ],
+            include: ["travel_history"]
+          });
+
+          const parsed = extractResiAndHistoryFromResponse(result);
+          if (!parsed) {
+            throw new Error(`Data pengiriman dengan nomor resi "${cleanResi}" tidak ditemukan.`);
+          }
+
+          state.pendingHistory = [];
+          state.savedHistory = parsed.history;
+          populateResiForm(parsed.resi);
+          setMode("edit", parsed.resi.nomor_resi);
+
+          const url = new URL(window.location.href);
+          url.searchParams.set("nomor_resi", parsed.resi.nomor_resi);
+          window.history.replaceState({}, "", url.toString());
+
+          if (!silentSuccess) {
+            showBanner("success", "Data Dimuat", `Berhasil memuat data pengiriman untuk resi ${parsed.resi.nomor_resi}.`);
+          }
+        } catch (err) {
+          showBanner("error", "Gagal Memuat Resi", err.message || "Tidak dapat mengambil data resi.");
+        } finally {
+          state.isLoadingResi = false;
+          dom.btnLoadResi.disabled = false;
+          dom.btnLoadResi.textContent = "Muat Data";
+        }
+      }
+
+      async function handleSaveResiClick() {
+        if (state.isSavingResi) return;
+        hideBanner();
+
+        const isCreate = state.mode === "create";
+        let resiData;
+
+        try {
+          resiData = collectAndValidateResiData(isCreate);
+        } catch (validationErr) {
+          showBanner("error", "Validasi Form Gagal", validationErr.message);
+          return;
+        }
+
+        // Prevent duplicate create by locking button immediately
+        state.isSavingResi = true;
+        dom.btnSaveResi.disabled = true;
+        dom.saveSpinner.classList.add("active");
+        dom.saveButtonText.textContent = isCreate ? "Menyimpan Resi Baru..." : "Memperbarui Data Resi...";
+
+        try {
+          if (isCreate) {
+            // 1. CREATE RESI
+            await callCrudJet({
+              action: "create",
+              table: "jet_resi",
+              data: resiData
+            });
+
+            const createdNomorResi = resiData.nomor_resi;
+
+            // Transition immediately to EDIT MODE so user cannot accidentally re-trigger CREATE
+            setMode("edit", createdNomorResi);
+            const url = new URL(window.location.href);
+            url.searchParams.set("nomor_resi", createdNomorResi);
+            window.history.replaceState({}, "", url.toString());
+
+            // 2. Check if user also filled out history form or has staged history
+            const pendingToSave = [...state.pendingHistory];
+            if (dom.hist_title.value.trim() || dom.hist_time.value.trim()) {
+              try {
+                const inlineHist = validateHistoryInput(createdNomorResi);
+                pendingToSave.push(inlineHist);
+                resetHistorySubForm();
+              } catch (inlineHistErr) {
+                await loadResiFromServer(createdNomorResi, true);
+                showBanner(
+                  "warning",
+                  "Penyimpanan Parsial (Resi Tersimpan, Riwayat Gagal)",
+                  `Resi ${createdNomorResi} berhasil dibuat, namun input riwayat tidak valid: ${inlineHistErr.message}`
+                );
+                return;
+              }
+            }
+
+            // 3. Save staged travel history records sequentially
+            let failedHistCount = 0;
+            let lastHistError = "";
+            const remainingPending = [];
+
+            for (const histItem of pendingToSave) {
+              try {
+                await callCrudJet({
+                  action: "create",
+                  table: "jet_travel_history",
+                  data: {
+                    nomor_resi: createdNomorResi,
+                    title: histItem.title,
+                    desc: histItem.desc,
+                    time: histItem.time,
+                    location: histItem.location
+                  }
+                });
+              } catch (histErr) {
+                failedHistCount++;
+                lastHistError = histErr.message;
+                remainingPending.push(histItem);
+              }
+            }
+
+            state.pendingHistory = remainingPending;
+            await loadResiFromServer(createdNomorResi, true);
+
+            if (failedHistCount > 0) {
+              showBanner(
+                "warning",
+                "Penyimpanan Parsial",
+                `Resi ${createdNomorResi} berhasil disimpan, namun ${failedHistCount} riwayat perjalanan gagal disimpan (${lastHistError}). Silakan simpan ulang riwayat pada Bagian 6.`
+              );
+            } else {
+              showBanner(
+                "success",
+                "Berhasil Disimpan",
+                `Data resi ${createdNomorResi}${pendingToSave.length > 0 ? ` beserta ${pendingToSave.length} riwayat perjalanan` : ""} berhasil disimpan.`
+              );
+            }
+          } else {
+            // UPDATE RESI (Never deletes old travel history)
+            await callCrudJet({
+              action: "update",
+              table: "jet_resi",
+              filters: [
+                {
+                  column: "nomor_resi",
+                  operator: "eq",
+                  value: state.currentResi
+                }
+              ],
+              data: resiData
+            });
+
+            await loadResiFromServer(state.currentResi, true);
+            showBanner("success", "Berhasil Diperbarui", `Perubahan data pengiriman ${state.currentResi} berhasil disimpan.`);
+          }
+        } catch (err) {
+          showBanner("error", "Gagal Menyimpan Data Resi", err.message || "Terjadi kesalahan saat menghubungi server.");
+        } finally {
+          state.isSavingResi = false;
+          dom.btnSaveResi.disabled = false;
+          dom.saveSpinner.classList.remove("active");
+          dom.saveButtonText.textContent = state.mode === "edit" ? "Perbarui Data Resi" : "Simpan Data Resi";
+        }
+      }
+
+      /* ======================================================================
+         12. EVENT LISTENERS & INITIALIZATION
+         ====================================================================== */
+      function initAccordions() {
+        const headers = document.querySelectorAll(".accordion-header");
+        headers.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const card = btn.closest(".accordion-card");
+            const isOpen = card.classList.toggle("open");
+            btn.setAttribute("aria-expanded", String(isOpen));
+          });
+        });
+      }
+
+      function initConfigModal() {
+        dom.btnOpenConfig.addEventListener("click", () => {
+          const cfg = getRuntimeConfig();
+          dom.cfgSupabaseUrl.value = cfg.supabaseUrl;
+          dom.cfgAnonKey.value = cfg.anonKey.includes("REPLACE_WITH_YOUR") ? "" : cfg.anonKey;
+          dom.cfgBearerToken.value = localStorage.getItem(STORAGE_KEYS.JWT) || "";
+          dom.configModal.classList.add("open");
+        });
+
+        dom.btnCloseConfig.addEventListener("click", () => {
+          dom.configModal.classList.remove("open");
+        });
+
+        dom.btnSaveConfig.addEventListener("click", () => {
+          const urlVal = dom.cfgSupabaseUrl.value.trim();
+          const anonVal = dom.cfgAnonKey.value.trim();
+          const jwtVal = dom.cfgBearerToken.value.trim();
+
+          if (urlVal) localStorage.setItem(STORAGE_KEYS.URL, urlVal);
+          if (anonVal) localStorage.setItem(STORAGE_KEYS.ANON, anonVal);
+          if (jwtVal) {
+            localStorage.setItem(STORAGE_KEYS.JWT, jwtVal);
+          } else {
+            localStorage.removeItem(STORAGE_KEYS.JWT);
+          }
+
+          dom.configModal.classList.remove("open");
+          showBanner("success", "Konfigurasi Disimpan", "Pengaturan koneksi Supabase Edge Function berhasil diperbarui.");
+        });
+      }
+
+      function initEvents() {
+        initAccordions();
+        initConfigModal();
+
+        dom.btnCloseAlert.addEventListener("click", hideBanner);
+        dom.btnNewMode.addEventListener("click", resetToCreateMode);
+
+        dom.btnLoadResi.addEventListener("click", () => {
+          loadResiFromServer(dom.searchResiInput.value, false);
+        });
+
+        dom.searchResiInput.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            loadResiFromServer(dom.searchResiInput.value, false);
+          }
+        });
+
+        dom.biaya_kirim.addEventListener("input", updateRupiahIndicators);
+        dom.refund_amount.addEventListener("input", updateRupiahIndicators);
+        dom.refund_is_locked.addEventListener("change", applyRefundLockState);
+
+        dom.btnSaveHistory.addEventListener("click", handleSaveHistoryClick);
+        dom.btnCancelHistoryEdit.addEventListener("click", resetHistorySubForm);
+
+        dom.historyTimelineList.addEventListener("click", (e) => {
+          const editBtn = e.target.closest(".btn-edit-history");
+          if (editBtn) {
+            const source = editBtn.dataset.source;
+            const idOrIdx = source === "local" ? editBtn.dataset.idx : editBtn.dataset.id;
+            startEditHistory(source, idOrIdx);
+            return;
+          }
+
+          const deleteBtn = e.target.closest(".btn-delete-history");
+          if (deleteBtn) {
+            const source = deleteBtn.dataset.source;
+            const idOrIdx = source === "local" ? deleteBtn.dataset.idx : deleteBtn.dataset.id;
+            requestDeleteHistory(source, idOrIdx);
+          }
+        });
+
+        dom.btnCancelDelete.addEventListener("click", () => {
+          state.deleteTargetId = null;
+          dom.confirmDeleteModal.classList.remove("open");
+        });
+
+        dom.btnConfirmDelete.addEventListener("click", confirmDeleteHistoryFromDb);
+        dom.btnSaveResi.addEventListener("click", handleSaveResiClick);
+      }
+
+      function bootstrap() {
+        initEvents();
+        applyRefundLockState();
+        updateRupiahIndicators();
+
+        const params = new URLSearchParams(window.location.search);
+        const queryResi = (params.get("nomor_resi") || params.get("resi") || "").trim();
+
+        if (queryResi) {
+          dom.searchResiInput.value = queryResi;
+          loadResiFromServer(queryResi, false);
+        } else {
+          setMode("create", "");
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", bootstrap);
+    })();
+  </script>
+</body>
+</html>
