@@ -102,9 +102,7 @@ input[readonly]{background:#f5f6f7;color:#737780}
 <details class="section" open>
 <summary><i class="fa-solid fa-truck-fast"></i> Status Pengiriman <i class="fa-solid fa-chevron-down chev"></i></summary>
 <div class="section-body"><div class="grid">
-<div class="field"><label for="status_pengiriman">Status</label><select id="status_pengiriman" name="status_pengiriman">
-<option>Menunggu Pengiriman</option><option>Diambil Kurir</option><option>Dalam Pengiriman</option><option>Tiba di Hub</option><option>Dalam Perjalanan</option><option>Dalam Pengantaran</option><option>Terkirim</option><option>Gagal Dikirim</option><option>Retur</option>
-</select></div>
+<div class="field"><label for="status_pengiriman">Status</label><input id="status_pengiriman" name="status_pengiriman" type="text" value="Menunggu Pengiriman" placeholder="Status pengiriman"></div>
 <div class="field"><label for="status_percent">Persentase Status (0–100)</label><input id="status_percent" name="status_percent" type="number" min="0" max="100" step="1" value="0"></div>
 </div></div>
 </details>
@@ -229,7 +227,7 @@ function readPayload() {
   if(refundFields.includes(name)&&currentRow?.refund_is_locked){out[name]=currentRow[name]??defaults[name];return;}
   if(booleanFields.includes(name)){out[name]=el.checked;return;}
   if(dateFields.includes(name)){out[name]=fromLocalDate(el.value);return;}
-  if(numberFields.includes(name)){out[name]=el.value===''?null:Number(el.value);return;}
+  if(numberFields.includes(name)){out[name]=el.value===''?(['weight','biaya_kirim','status_percent','refund_amount'].includes(name)?defaults[name]:null):Number(el.value);return;}
   out[name]=el.value.trim()===''?null:el.value.trim();
  });
  if(currentRow){
