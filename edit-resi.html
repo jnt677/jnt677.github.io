@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#e60012">
+<title>Edit Resi | J&T Express</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root{--red:#e60012;--ink:#202124;--muted:#74777d;--bg:#f4f5f7;--line:#e8e9ed;--safe:env(safe-area-inset-bottom)}
+*{box-sizing:border-box}
+html{min-height:100%;background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px Inter,Arial,sans-serif;padding-bottom:calc(88px + var(--safe))}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.shell{width:100%;max-width:500px;margin:0 auto;min-height:100vh;background:var(--bg);position:relative}
+.top{position:sticky;top:0;z-index:5;background:var(--red);color:#fff;padding:13px 16px;min-height:64px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px #00000012}
+.back{width:36px;height:36px;border:0;border-radius:10px;background:#ffffff20;color:white;font-size:16px}
+.brand{font-weight:800;font-size:16px;letter-spacing:-.4px;flex:1}
+.brand small{display:block;font-size:9px;letter-spacing:1.3px;margin-top:4px;opacity:.85}
+main{padding:17px 13px 28px}
+.intro{margin:0 2px 14px}
+.intro h1{font-size:21px;letter-spacing:-.5px;margin:0 0 5px}
+.sub{font-size:11px;line-height:1.5;color:var(--muted)}
+.mode{display:inline-flex;align-items:center;gap:6px;margin-top:9px;padding:6px 9px;border-radius:20px;background:#fff0f1;color:#c40010;font-size:10px;font-weight:700}
+.card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px;margin-bottom:11px;box-shadow:0 2px 8px #15151505}
+.section{border:1px solid var(--line);border-radius:11px;background:#fff;margin-bottom:10px;overflow:hidden}
+.section summary{list-style:none;display:flex;align-items:center;gap:10px;padding:14px 13px;font-weight:800;font-size:12px;cursor:pointer}
+.section summary::-webkit-details-marker{display:none}
+.section summary i:first-child{width:20px;text-align:center;color:var(--red);font-size:14px}
+.section summary .chev{margin-left:auto;color:#92969d;transition:transform .15s}
+.section[open] summary .chev{transform:rotate(180deg)}
+.section-body{padding:0 13px 14px;border-top:1px solid #f0f0f1}
+.section-note{font-size:10px;color:var(--muted);line-height:1.5;padding:11px 0 2px}
+.grid{display:grid;grid-template-columns:1fr;gap:11px;padding-top:11px}
+.field{min-width:0}
+.field.full{grid-column:1/-1}
+label{display:block;font-size:10px;font-weight:700;color:#555b64;margin:0 0 6px}
+input,select,textarea{width:100%;min-height:42px;border:1px solid #dfe1e6;border-radius:8px;background:#fff;color:var(--ink);padding:10px 11px;font-size:12px;outline-color:var(--red)}
+textarea{min-height:76px;resize:vertical;line-height:1.45}
+input:disabled,textarea:disabled{background:#f3f4f6;color:#8a8e95}
+input[readonly]{background:#f5f6f7;color:#737780}
+.check{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:43px;padding:8px 10px;border:1px solid #e4e5e9;border-radius:8px}
+.check label{margin:0;font-size:11px;color:#34383f}
+.check input{width:19px;min-height:19px;height:19px;accent-color:var(--red)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.actions{position:fixed;z-index:6;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:500px;display:grid;grid-template-columns:1fr 1.35fr;gap:9px;padding:11px 13px calc(11px + var(--safe));background:#fff;border-top:1px solid var(--line);box-shadow:0 -5px 18px #1515150b}
+.btn{border:0;border-radius:9px;min-height:44px;padding:10px 12px;font-size:12px;font-weight:800}
+.secondary{background:#f0f1f3;color:#34383f}
+.primary{background:var(--red);color:#fff}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.notice{padding:11px 12px;border-radius:9px;background:#fff8e7;color:#795400;font-size:10px;line-height:1.5;margin-bottom:11px}
+.status{font-size:11px;line-height:1.5;padding:10px 2px;color:var(--muted);white-space:pre-line}
+.status.error{color:#b00012}
+.status.success{color:#137a43}
+.hidden{display:none!important}
+@media(min-width:501px){body{padding-top:16px;padding-bottom:16px}.shell{border:1px solid #e6e6e6;border-radius:14px;overflow:hidden;min-height:calc(100vh - 32px)}.actions{position:sticky;transform:none;left:auto;max-width:500px;margin:0 auto}}
+@media(max-width:360px){main{padding-inline:10px}.top{padding-inline:12px}.intro h1{font-size:19px}.section summary{padding-inline:11px}.section-body{padding-inline:11px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="top">
+<button class="back" id="back" type="button" aria-label="Kembali"><i class="fa-solid fa-arrow-left"></i></button>
+<div class="brand">J&amp;T EXPRESS<small>DATA PENGIRIMAN</small></div>
+</header>
+<main>
+<div class="intro">
+<h1 id="page-title">Edit Resi</h1>
+<div class="sub" id="page-subtitle">Kelola informasi pengiriman pada database.</div>
+<span class="mode" id="mode"><i class="fa-solid fa-database"></i> public.jet_resi</span>
+</div>
+<div class="notice" id="load-notice">Memuat data resi…</div>
+<form id="resi-form" novalidate>
+<details class="section" open>
+<summary><i class="fa-solid fa-barcode"></i> Identitas Resi <i class="fa-solid fa-chevron-down chev"></i></summary>
+<div class="section-body"><div class="grid">
+<div class="field"><label for="nomor_resi">Nomor Resi <span aria-hidden="true">*</span></label><input id="nomor_resi" name="nomor_resi" type="text" maxlength="100" required autocomplete="off" placeholder="Masukkan nomor resi"></div>
+<div class="field"><label for="created_at">Dibuat Pada</label><input id="created_at" type="text" readonly placeholder="Otomatis dari database"></div>
+<div class="field"><label for="updated_at">Terakhir Diperbarui</label><input id="updated_at" type="text" readonly placeholder="Otomatis dari database"></div>
+</div></div>
+</details>
+<details class="section" open>
+<summary><i class="fa-regular fa-calendar"></i> Waktu Pengiriman <i class="fa-solid fa-chevron-down chev"></i></summary>
+<div class="section-body"><div class="grid">
+<div class="field"><label for="date">Tanggal Pengiriman</label><input id="date" name="date" type="datetime-local"></div>
+<div class="field"><label for="estimasi_tiba">Estimasi Tiba</label><input id="estimasi_tiba" name="estimasi_tiba" type="datetime-local"></div>
+</div></div>
+</details>
+<details class="section" open>
+<summary><i class="fa-solid fa-box"></i> Informasi Paket <i class="fa-solid fa-chevron-down chev"></i></summary>
+<div class="section-body"><div class="grid">
+<div class="field"><label for="paket">Nama / Jenis Paket</label><input id="paket" name="paket" type="text" placeholder="Contoh: Elektronik"></div>
+<div class="pair">
+<div class="field"><label for="weight">Berat (kg)</label><input id="weight" name="weight" type="number" min="0" step="0.001" value="0"></div>
+<div class="field"><label for="biaya_kirim">Biaya Kirim (Rp)</label><input id="biaya_kirim" name="biaya_kirim" type="number" min="0" step="1" value="0"></div>
+</div>
+</div></div>
+</details>
+<details class="section" open>
+<summary><i class="fa-solid fa-truck-fast"></i> Status Pengiriman <i class="fa-solid fa-chevron-down chev"></i></summary>
+<div class="section-body"><div class="grid">
+<div class="field"><label for="status_pengiriman">Status</label><select id="status_pengiriman" name="status_pengiriman">
+<option>Menunggu Pengiriman</option><option>Diambil Kurir</option><option>Dalam Pengiriman</option><option>Tiba di Hub</option><option>Dalam Perjalanan</option><option>Dalam Pengantaran</option><option>Terkirim</option><option>Gagal Dikirim</option><option>Retur</option>
+</select></div>
+<div class="field"><label for="status_percent">Persentase Status (0–100)</label><input id="status_percent" name="status_percent" type="number" min="0" max="100" step="1" value="0"></div>
+</div></div>
+</details>
+<details class="section" open>
+<summary><i class="fa-solid fa-user"></i> Pengirim <i class="fa-solid fa-chevron-down chev"></i></summary>
+<div class="section-body"><div class="grid">
+<div class="field"><label for="pengirim_nama">Nama Pengirim</label><input id="pengirim_nama" name="pengirim_nama" type="text"></div>
+<div class="field"><label for="pengirim_telepon">Telepon Pengirim</label><input id="pengirim_telepon" name="pengirim_telepon" type="tel" inputmode="tel"></div>
+<div class="field"><label for="pengirim_alamat">Alamat Pengirim</label><textarea id="pengirim_alamat" name="pengirim_alamat"></textarea></div>
+<div class="field"><label for="pengirim_label">Label Lokasi Pengirim</label><input id="pengirim_label" name="pengirim_label" type="text" placeholder="Nama lokasi / titik asal"></div>
+<div class="field"><label for="pengirim_gateway">Gateway Pengirim</label><input id="pengirim_gateway" name="pengirim_gateway" type="text"></div>
+<div class="pair">
+<div class="field"><label for="pengirim_coordinate_lat">Latitude</label><input id="pengirim_coordinate_lat" name="pengirim_coordinate_lat" type="number" min="-90" max="90" step="any"></div>
+<div class="field"><label for="pengirim_coordinate_lng">Longitude</label><input id="pengirim_coordinate_lng" name="pengirim_coordinate_lng" type="number" min="-180" max="180" step="any"></div>
+</div>
+</div></div>
+</details>
+<details class="section" open>
+<summary><i class="fa-solid fa-user-check"></i> Penerima <i class="fa-solid fa-chevron-down chev"></i></summary>
+<div class="section-body"><div class="grid">
+<div class="field"><label for="penerima_nama">Nama Penerima</label><input id="penerima_nama" name="penerima_nama" type="text"></div>
+<div class="field"><label for="penerima_telepon">Telepon Penerima</label><input id="penerima_telepon" name="penerima_telepon" type="tel" inputmode="tel"></div>
+<div class="field"><label for="penerima_alamat">Alamat Penerima</label><textarea id="penerima_alamat" name="penerima_alamat"></textarea></div>
+<div class="field"><label for="penerima_label">Label Lokasi Penerima</label><input id="penerima_label" name="penerima_label" type="text" placeholder="Nama lokasi / titik tujuan"></div>
+<div class="field"><label for="penerima_gateway">Gateway Penerima</label><input id="penerima_gateway" name="penerima_gateway" type="text"></div>
+<div class="pair">
+<div class="field"><label for="penerima_coordinate_lat">Latitude</label><input id="penerima_coordinate_lat" name="penerima_coordinate_lat" type="number" min="-90" max="90" step="any"></div>
+<div class="field"><label for="penerima_coordinate_lng">Longitude</label><input id="penerima_coordinate_lng" name="penerima_coordinate_lng" type="number" min="-180" max="180" step="any"></div>
+</div>
+</div></div>
+</details>
+<details class="section" open>
+<summary><i class="fa-solid fa-sliders"></i> Pengaturan &amp; Refund <i class="fa-solid fa-chevron-down chev"></i></summary>
+<div class="section-body">
+<div class="section-note">Pengaturan resi dan data rekening refund disimpan pada kolom jet_resi. Jika refund terkunci, data rekening dan nominal refund tidak dapat diubah dari halaman ini.</div>
+<div class="grid">
+<div class="field"><div class="check"><label for="tagihan_is_active">Tagihan Aktif</label><input id="tagihan_is_active" name="tagihan_is_active" type="checkbox"></div></div>
+<div class="field"><div class="check"><label for="refund_is_locked">Refund Terkunci</label><input id="refund_is_locked" name="refund_is_locked" type="checkbox"></div></div>
+<div class="field"><div class="check"><label for="is_active">Resi Aktif</label><input id="is_active" name="is_active" type="checkbox"></div></div>
+<div class="field"><div class="check"><label for="validasi_is_active">Validasi Aktif</label><input id="validasi_is_active" name="validasi_is_active" type="checkbox"></div></div>
+<div class="field"><label for="refund_bank">Bank Refund</label><input id="refund_bank" name="refund_bank" type="text" placeholder="Nama bank"></div>
+<div class="field"><label for="refund_amount">Nominal Refund (Rp)</label><input id="refund_amount" name="refund_amount" type="number" min="0" step="1" value="0"></div>
+<div class="field"><label for="refund_account_holder">Nama Pemilik Rekening</label><input id="refund_account_holder" name="refund_account_holder" type="text"></div>
+<div class="field"><label for="refund_account_number">Nomor Rekening</label><input id="refund_account_number" name="refund_account_number" type="text" inputmode="numeric"></div>
+</div></div>
+</details>
+<div id="form-status" class="status" role="status" aria-live="polite"></div>
+</form>
+</main>
+<div class="actions">
+<button class="btn secondary" id="cancel" type="button">Batal</button>
+<button class="btn primary" id="save" type="submit" form="resi-form"><i class="fa-solid fa-floppy-disk"></i> Simpan Resi</button>
+</div>
+</div>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SUPABASE_URL = 'https://jezjupxysmctthvkrnpx.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_B701GfK3HeARu1h3b9SOtg_PzU2_3Ei';
+const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const $ = (id) => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+const requestedResi = params.get('nomor_resi') || params.get('resi') || '';
+const isCreate = params.get('action') === 'create' || params.get('mode') === 'create' || params.get('new') === '1' || (!requestedResi && params.get('action') !== 'edit');
+let currentRow = null;
+let saving = false;
+const fieldNames = [
+ 'nomor_resi','date','estimasi_tiba','paket','weight','biaya_kirim','status_pengiriman','status_percent',
+ 'pengirim_nama','pengirim_alamat','pengirim_telepon','pengirim_label','pengirim_gateway','pengirim_coordinate_lat','pengirim_coordinate_lng',
+ 'penerima_nama','penerima_alamat','penerima_telepon','penerima_label','penerima_gateway','penerima_coordinate_lat','penerima_coordinate_lng',
+ 'tagihan_is_active','refund_is_locked','is_active','validasi_is_active','refund_bank','refund_amount','refund_account_holder','refund_account_number'
+];
+const defaults = {
+ weight:0,biaya_kirim:0,status_pengiriman:'Menunggu Pengiriman',status_percent:0,
+ tagihan_is_active:false,refund_is_locked:false,is_active:false,validasi_is_active:false,
+ refund_bank:'',refund_amount:0,refund_account_holder:'',refund_account_number:''
+};
+const dateFields = ['date','estimasi_tiba'];
+const numberFields = ['weight','biaya_kirim','status_percent','pengirim_coordinate_lat','pengirim_coordinate_lng','penerima_coordinate_lat','penerima_coordinate_lng','refund_amount'];
+const booleanFields = ['tagihan_is_active','refund_is_locked','is_active','validasi_is_active'];
+const refundFields = ['refund_bank','refund_amount','refund_account_holder','refund_account_number'];
+
+function setStatus(message,type='') {
+ const el=$('form-status');el.textContent=message;el.className='status'+(type?' '+type:'');
+}
+function showLoadNotice(message,hide=false) {
+ const el=$('load-notice');el.textContent=message;el.classList.toggle('hidden',hide);
+}
+function toLocalDate(value) {
+ if(!value)return '';
+ const d=new Date(value);
+ if(Number.isNaN(d.getTime()))return '';
+ const p=n=>String(n).padStart(2,'0');
+ return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes());
+}
+function fromLocalDate(value) { return value ? new Date(value).toISOString() : null; }
+function formatDate(value) {
+ if(!value)return '—';
+ const d=new Date(value);
+ return Number.isNaN(d.getTime())?'—':d.toLocaleString('id-ID');
+}
+function fillForm(row={}) {
+ fieldNames.forEach(name=>{
+  const el=$(name);if(!el)return;
+  const value=row[name]===undefined?defaults[name]:row[name];
+  if(booleanFields.includes(name))el.checked=Boolean(value);
+  else if(dateFields.includes(name))el.value=toLocalDate(value);
+  else el.value=value===null||value===undefined?'':String(value);
+ });
+ $('created_at').value=formatDate(row.created_at);
+ $('updated_at').value=formatDate(row.updated_at);
+ $('nomor_resi').readOnly=!!currentRow;
+ if(currentRow?.refund_is_locked){
+  $('refund_is_locked').checked=true;$('refund_is_locked').disabled=true;
+  refundFields.forEach(name=>{$(name).disabled=true;});
+ }
+}
+function readPayload() {
+ const out={};
+ fieldNames.forEach(name=>{
+  const el=$(name);
+  if(refundFields.includes(name)&&currentRow?.refund_is_locked){out[name]=currentRow[name]??defaults[name];return;}
+  if(booleanFields.includes(name)){out[name]=el.checked;return;}
+  if(dateFields.includes(name)){out[name]=fromLocalDate(el.value);return;}
+  if(numberFields.includes(name)){out[name]=el.value===''?null:Number(el.value);return;}
+  out[name]=el.value.trim()===''?null:el.value.trim();
+ });
+ if(currentRow){
+  delete out.nomor_resi;
+  out.updated_at=new Date().toISOString();
+ }
+ return out;
+}
+function validatePayload(data) {
+ const fail=message=>{throw new Error(message);};
+ if(!currentRow&&!data.nomor_resi?.trim())fail('Nomor resi wajib diisi.');
+ for(const name of ['weight','biaya_kirim','refund_amount']){
+  const value=data[name];
+  if(value!==null&&(!Number.isFinite(value)||value<0))fail(name+' harus berupa angka nol atau lebih.');
+ }
+ if(data.weight!==null&&Number(data.weight.toFixed(3))!==data.weight)fail('Berat maksimal 3 angka desimal.');
+ if(!Number.isInteger(data.biaya_kirim)||!Number.isInteger(data.refund_amount))fail('Biaya kirim dan nominal refund harus bilangan bulat.');
+ if(!Number.isInteger(data.status_percent)||data.status_percent<0||data.status_percent>100)fail('Persentase status harus bilangan bulat 0–100.');
+ for(const [lat,lng,label] of [
+  ['pengirim_coordinate_lat','pengirim_coordinate_lng','Pengirim'],
+  ['penerima_coordinate_lat','penerima_coordinate_lng','Penerima']
+ ]){
+  if(data[lat]!==null&&(!Number.isFinite(data[lat])||data[lat]<-90||data[lat]>90))fail('Latitude '+label+' harus antara -90 sampai 90.');
+  if(data[lng]!==null&&(!Number.isFinite(data[lng])||data[lng]<-180||data[lng]>180))fail('Longitude '+label+' harus antara -180 sampai 180.');
+  if((data[lat]===null)!==(data[lng]===null))fail('Latitude dan longitude '+label+' harus diisi berpasangan.');
+ }
+}
+async function loadRecord() {
+ if(isCreate){
+  currentRow=null;$('page-title').textContent='Tambah Resi';$('page-subtitle').textContent='Buat data pengiriman baru pada tabel jet_resi.';
+  $('mode').innerHTML='<i class="fa-solid fa-circle-plus"></i> MODE CREATE';
+  fillForm({});showLoadNotice('Mode tambah resi. Lengkapi data yang diperlukan.',true);return;
+ }
+ if(!requestedResi){throw new Error('Nomor resi tidak ditemukan pada URL.');}
+ const {data,error}=await supabase.from('jet_resi').select('*').eq('nomor_resi',requestedResi).maybeSingle();
+ if(error)throw error;
+ if(!data)throw new Error('Resi '+requestedResi+' tidak ditemukan atau tidak dapat diakses.');
+ currentRow=data;$('page-title').textContent='Edit Resi';$('page-subtitle').textContent='Perbarui data pengiriman '+data.nomor_resi+'.';
+ $('mode').innerHTML='<i class="fa-solid fa-pen-to-square"></i> MODE EDIT';
+ fillForm(data);showLoadNotice('Data berhasil dimuat dari public.jet_resi.',true);
+ if(data.refund_is_locked)showLoadNotice('Refund terkunci. Empat kolom data rekening dan nominal refund dipertahankan tanpa perubahan.',false);
+}
+async function saveRecord(event) {
+ event.preventDefault();if(saving)return;
+ const button=$('save');saving=true;button.disabled=true;button.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan…';setStatus('Memvalidasi data…');
+ try{
+  const payload=readPayload();validatePayload(payload);
+  let result;
+  if(currentRow){
+   result=await supabase.from('jet_resi').update(payload).eq('nomor_resi',currentRow.nomor_resi).select('nomor_resi').maybeSingle();
+  }else{
+   result=await supabase.from('jet_resi').insert(payload).select('nomor_resi').single();
+  }
+  if(result.error)throw result.error;
+  if(!result.data)throw new Error('Tidak ada satu baris pun yang tersimpan. Periksa akses RLS atau data resi.');
+  setStatus('Berhasil menyimpan resi '+result.data.nomor_resi+'.','success');
+  showLoadNotice('Data tersimpan. Mengalihkan kembali ke Admin…',false);
+  setTimeout(()=>{location.href='admin.html?view=resi';},900);
+ }catch(error){
+  console.error(error);setStatus('Gagal menyimpan: '+(error?.message||String(error)),'error');
+  showLoadNotice('Data belum tersimpan. Periksa pesan kesalahan di bawah tombol simpan.',false);
+ }finally{
+  saving=false;button.disabled=false;button.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Simpan Resi';
+ }
+}
+function goBack(){if(history.length>1&&document.referrer&&new URL(document.referrer).origin===location.origin)history.back();else location.href='admin.html?view=resi';}
+$('resi-form').addEventListener('submit',saveRecord);
+$('back').addEventListener('click',goBack);
+$('cancel').addEventListener('click',goBack);
+(async()=>{try{await loadRecord();}catch(error){console.error(error);showLoadNotice('Gagal memuat: '+(error?.message||String(error)),false);$('save').disabled=true;setStatus('Periksa URL, akses Supabase, dan data jet_resi.','error');}})();
+</script>
+</body>
+</html>
