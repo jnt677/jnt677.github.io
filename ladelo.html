@@ -98,6 +98,7 @@ input,select,textarea{width:100%;min-height:42px;border:1px solid #dfe1e6;border
 </div>
 <script>
 const API='https://jezjupxysmctthvkrnpx.supabase.co/functions/v1/ladelo';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_B701GfK3HeARu1h3b9SOtg_PzU2_3Ei';
 const $=id=>document.getElementById(id);
 const params=new URLSearchParams(location.search);
 const action=params.get('action')||'list';
@@ -112,7 +113,7 @@ let currentRow=null,rows=[],saving=false;
 function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 async function api(method,table,payload={},query={}){
  let url=API;
- const headers={'Content-Type':'application/json'};
+ const headers={'Content-Type':'application/json','apikey':SUPABASE_PUBLISHABLE_KEY};
  if(method==='GET'){
   const q=new URLSearchParams({table,...query});
   url+='?'+q.toString();
